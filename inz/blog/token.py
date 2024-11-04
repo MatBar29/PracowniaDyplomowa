@@ -25,12 +25,13 @@ def verify_token(token: str, credentials_exception):
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         email: str = payload.get("sub")
         user_id: int = payload.get("id")  # Extract user ID
+        role: str = payload.get("role")
 
         if email is None or user_id is None:  # Check both fields
             raise credentials_exception
             
         # Create TokenData with both email and ID
-        token_data = TokenData(id=user_id, email=email)
+        token_data = TokenData(id=user_id, email=email, role=role)
         
         return token_data
         

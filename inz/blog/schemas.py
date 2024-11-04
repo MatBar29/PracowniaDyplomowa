@@ -64,3 +64,7 @@ class Token(BaseModel):
 class TokenData(BaseModel):
     id: int
     email: Optional[str] = None
+    role: Optional[RoleEnum] = 'user'
+
+    class Config:
+        orm_mode = True

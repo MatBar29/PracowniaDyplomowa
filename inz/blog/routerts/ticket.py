@@ -3,7 +3,7 @@ from .. import schemas, database, models
 from typing import List
 from sqlalchemy.orm import Session
 from ..repository import ticket
-from ..oauth2 import get_current_user
+from ..oauth2 import get_current_user, is_admin
 
 router = APIRouter(tags=['tickets'], prefix='/tickets')
 
@@ -20,7 +20,7 @@ def delete(id: int, db: Session = Depends(database.get_db), current_user: schema
     return ticket.delete(id, db)
 
 @router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
-def update(id: int, request: schemas.TicketUpdate, db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user)):
+def update(id: int, request: schemas.TicketUpdate, db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user), user=Depends(is_admin)):
     return ticket.update(id, request, db)
 
 
