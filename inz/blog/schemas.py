@@ -1,3 +1,4 @@
+import datetime
 from pydantic import BaseModel
 from typing import List, Optional
 from .enum_schemas import StatusEnum, PriorityEnum, RoleEnum
@@ -5,6 +6,8 @@ from .enum_schemas import StatusEnum, PriorityEnum, RoleEnum
 class Ticket(BaseModel):
     title: str
     description: str
+    created_at: Optional[datetime.datetime] = datetime.datetime.now
+    updated_at: Optional[datetime.datetime] = datetime.datetime.now
 
     class Config:
         orm_mode = True
@@ -13,6 +16,7 @@ class TicketUpdate(BaseModel):
     status: Optional[StatusEnum] = None
     priority: Optional[PriorityEnum] = None
     assigned_to: Optional[int] = None
+    updated_at: Optional[datetime.datetime] = datetime.datetime.now
 
 class User(BaseModel):
     name: str
@@ -27,6 +31,7 @@ class ShowUser(BaseModel):
     name: str
     email: str
     tickets: List[Ticket] = []
+    role: Optional[RoleEnum] = None
 
     class Config:
         orm_mode = True
@@ -46,6 +51,8 @@ class ShowTicket(BaseModel):
     priority: Optional[PriorityEnum] = None
     creator: ShowUserT
     assigned_to: Optional[ShowUserT] = None
+    created_at: datetime.datetime
+    updated_at: datetime.datetime
 
     class Config:
         orm_mode = True

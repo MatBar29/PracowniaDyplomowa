@@ -1,7 +1,9 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Enum
+import datetime
+from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, Enum
 from .database import Base
 from sqlalchemy.orm import relationship
 from .enum_models import StatusEnum, PriorityEnum, RoleEnum
+
 
 class Ticket(Base):
     __tablename__ = 'tickets'
@@ -11,6 +13,8 @@ class Ticket(Base):
     description = Column(String)
     status = Column(Enum(StatusEnum), default='new')
     priority = Column(Enum(PriorityEnum), nullable=True)
+    created_at = Column(DateTime, default = datetime.datetime.now())
+    updated_at = Column(DateTime, default = datetime.datetime.now())
 
     user_id = Column(Integer, ForeignKey('users.id'))
     creator = relationship("User", foreign_keys=[user_id], back_populates="tickets_created")
