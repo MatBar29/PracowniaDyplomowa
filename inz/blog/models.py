@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 from .database import Base
 from sqlalchemy.orm import relationship
-from .enum_models import StatusEnum, PriorityEnum
+from .enum_models import StatusEnum, PriorityEnum, RoleEnum
 
 class Ticket(Base):
     __tablename__ = 'tickets'
@@ -26,6 +26,7 @@ class User(Base):
     name = Column(String)
     email = Column(String)
     password = Column(String)
+    role = Column(Enum(RoleEnum), default='user')
 
     tickets_created = relationship('Ticket', foreign_keys=[Ticket.user_id], back_populates="creator", cascade="all, delete-orphan")
     tickets_assigned = relationship('Ticket', foreign_keys=[Ticket.assigned_to_id], back_populates="assigned_to")

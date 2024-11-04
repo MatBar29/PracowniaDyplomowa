@@ -17,3 +17,7 @@ def create(request: schemas.User, db: Session = Depends(get_db)):
 @router.get('/{id}',response_model=schemas.ShowUser)
 def show(id: int, db: Session = Depends(get_db)):
     return user.show(id, db)
+
+@router.put('/{email}', status_code=status.HTTP_202_ACCEPTED)
+def update(email: str, request: schemas.UserUpdate , db: Session = Depends(get_db)):
+    return user.update(email, request, db)

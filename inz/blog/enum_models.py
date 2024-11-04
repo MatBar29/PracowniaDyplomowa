@@ -11,3 +11,9 @@ class PriorityEnum(enum.Enum):
     low = 'low'
     medium = 'medium'
     high = 'high'
+
+class RoleEnum(enum.Enum):
+    admin = 'admin'
+    user = 'user'
+    service = 'service'
+    menager = 'menager'

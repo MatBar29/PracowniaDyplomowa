@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import List, Optional
-from .enum_schemas import StatusEnum, PriorityEnum
+from .enum_schemas import StatusEnum, PriorityEnum, RoleEnum
 
 class Ticket(BaseModel):
     title: str
@@ -18,6 +18,10 @@ class User(BaseModel):
     name: str
     email: str
     password: str
+    role: Optional[RoleEnum] = 'user'
+
+    class Config:
+        orm_mode = True
 
 class ShowUser(BaseModel):
     name: str
@@ -30,6 +34,7 @@ class ShowUser(BaseModel):
 class ShowUserT(BaseModel):
     name: str
     email: str
+    role: Optional[RoleEnum] = 'user'
 
     class Config:
         orm_mode = True
@@ -44,6 +49,9 @@ class ShowTicket(BaseModel):
 
     class Config:
         orm_mode = True
+
+class UserUpdate(BaseModel):
+    role: Optional[RoleEnum] = None
 
 class Login(BaseModel):
     username: str
