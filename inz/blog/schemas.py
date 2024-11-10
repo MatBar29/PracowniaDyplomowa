@@ -3,6 +3,7 @@ from pydantic import BaseModel
 from typing import List, Optional
 from .enum_schemas import StatusEnum, PriorityEnum, RoleEnum
 
+
 class Ticket(BaseModel):
     title: str
     description: str
@@ -44,6 +45,14 @@ class ShowUserT(BaseModel):
     class Config:
         orm_mode = True
 
+class ShowCommentT(BaseModel):
+    comment:str
+    created_at: datetime.datetime
+    user: ShowUserT  # User who created the comment
+
+    class Config:
+        orm_mode = True
+
 class ShowTicket(BaseModel):
     title: str
     description: str
@@ -53,6 +62,7 @@ class ShowTicket(BaseModel):
     assigned_to: Optional[ShowUserT] = None
     created_at: datetime.datetime
     updated_at: datetime.datetime
+    comments: List[ShowCommentT]
 
     class Config:
         orm_mode = True
@@ -72,6 +82,26 @@ class TokenData(BaseModel):
     id: int
     email: Optional[str] = None
     role: Optional[RoleEnum] = 'user'
+
+    class Config:
+        orm_mode = True
+
+
+# Schemas for Comment functionality
+
+class ShowComment(BaseModel):
+    comment_id: int
+    comment: str
+    created_at: datetime.datetime
+    user: ShowUserT  # User who created the comment
+    ticket_id: int
+
+    class Config:
+        orm_mode = True
+
+class CreateComment(BaseModel):
+    comment: str
+    ticket_id: int
 
     class Config:
         orm_mode = True
