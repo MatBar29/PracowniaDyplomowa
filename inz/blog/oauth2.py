@@ -2,7 +2,6 @@ from fastapi import Depends, HTTPException, status, Request
 from fastapi.security import OAuth2PasswordBearer
 from blog.enum_models import RoleEnum
 from blog.models import User
-from . import schemas
 from . import token
 from sqlalchemy.orm import Session
 from .database import get_db

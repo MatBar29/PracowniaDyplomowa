@@ -25,6 +25,7 @@ class Ticket(Base):
     comments = relationship('Comment', back_populates="ticket", cascade="all, delete-orphan")
 
 
+
 class User(Base):
     __tablename__ = 'users'
 
@@ -38,6 +39,7 @@ class User(Base):
     tickets_assigned = relationship('Ticket', foreign_keys=[Ticket.assigned_to_id], back_populates="assigned_to")
 
     comments = relationship('Comment', back_populates="user", cascade="all, delete-orphan")
+
 
 
 class Comment(Base):

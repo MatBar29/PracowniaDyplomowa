@@ -1,7 +1,6 @@
-from fastapi import APIRouter, Depends, status, HTTPException
+from fastapi import APIRouter, Depends, status
 from blog.oauth2 import is_admin
-from .. import database, schemas, models
-from ..hashing import Hash
+from .. import database, schemas
 from sqlalchemy.orm import Session
 from ..repository import user
 
@@ -20,5 +19,5 @@ def show(id: int, db: Session = Depends(get_db)):
     return user.show(id, db)
 
 @router.put('/{email}', status_code=status.HTTP_202_ACCEPTED)
-def update(email: str, request: schemas.UserUpdate , db: Session = Depends(get_db), user=Depends(is_admin)):
+def update(email: str, request: schemas.UserUpdate , db: Session = Depends(get_db), usera=Depends(is_admin)):
     return user.update(email, request, db)
