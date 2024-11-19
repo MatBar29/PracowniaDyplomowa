@@ -48,7 +48,7 @@ class ShowUserT(BaseModel):
 class ShowCommentT(BaseModel):
     comment:str
     created_at: datetime.datetime
-    user: ShowUserT  # User who created the comment
+    user: ShowUserT
 
     class Config:
         orm_mode = True
@@ -86,14 +86,11 @@ class TokenData(BaseModel):
     class Config:
         orm_mode = True
 
-
-# Schemas for Comment functionality
-
 class ShowComment(BaseModel):
     comment_id: int
     comment: str
     created_at: datetime.datetime
-    user: ShowUserT  # User who created the comment
+    user: ShowUserT
     ticket_id: int
 
     class Config:
@@ -105,3 +102,17 @@ class CreateComment(BaseModel):
 
     class Config:
         orm_mode = True
+
+class AttachmentBase(BaseModel):
+    filename: str
+    filepath: str
+
+    class Config:
+        orm_mode = True
+
+class CreateAttachment(BaseModel):
+    ticket_id: int
+
+class ShowAttachment(AttachmentBase):
+    id: int
+    uploaded_at: datetime.datetime

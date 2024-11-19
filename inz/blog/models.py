@@ -24,6 +24,9 @@ class Ticket(Base):
 
     comments = relationship('Comment', back_populates="ticket", cascade="all, delete-orphan")
 
+    attachments = relationship('Attachment', back_populates="ticket", cascade="all, delete-orphan")
+
+
 
 
 class User(Base):
@@ -53,3 +56,15 @@ class Comment(Base):
 
     ticket = relationship("Ticket", back_populates="comments")
     user = relationship("User", back_populates="comments")
+
+
+class Attachment(Base):
+    __tablename__ = 'attachments'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    filename = Column(String, nullable=False)
+    filepath = Column(String, nullable=False)
+    uploaded_at = Column(DateTime, default=datetime.datetime.now())
+    ticket_id = Column(Integer, ForeignKey('tickets.id'))
+
+    ticket = relationship("Ticket", back_populates="attachments")
