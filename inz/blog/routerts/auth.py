@@ -25,7 +25,7 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends(), db
 
 
 @router.post('/logout')
-def logout(response: Response):
+def logout(response: Response, status_code = status.HTTP_200_OK):
     # Usuwanie tokena z ciasteczka przez ustawienie pustej wartości i daty wygaśnięcia w przeszłości
     response.set_cookie(key="jwt_token", value="", expires=0)
     return {"message": "Logout successful"}
