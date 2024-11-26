@@ -1,38 +1,50 @@
-.App {
-  text-align: center;
+/* Stylizacja navbaru */
+.navbar-dark {
+  background-color: #333 !important; /* Ciemne tło dla navbaru */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.navbar-brand,
+.nav-link {
+  color: #ffffff !important; /* Biały tekst */
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.navbar-nav .btn {
+  color: #ffffff !important; /* Białe przyciski */
+  border-color: #ffffff !important;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+.navbar-nav .btn:hover {
+  background-color: #ffffff !important; /* Kolor tła przycisku */
+  color: #333 !important;
 }
 
-.App-link {
-  color: #61dafb;
+/* Przyciski */
+.btn-outline-info {
+  color: #ffffff !important;
+  border-color: #17a2b8 !important;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.btn-outline-info:hover {
+  background-color: #17a2b8 !important;
+  color: white !important;
+}
+
+.btn-outline-success {
+  color: #ffffff !important;
+  border-color: #28a745 !important;
+}
+
+.btn-outline-success:hover {
+  background-color: #28a745 !important;
+  color: white !important;
+}
+
+.btn-outline-danger {
+  color: #ffffff !important;
+  border-color: #dc3545 !important;
+}
+
+.btn-outline-danger:hover {
+  background-color: #dc3545 !important;
+  color: white !important;
 }

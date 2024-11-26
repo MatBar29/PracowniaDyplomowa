@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Response
+from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
+from blog.oauth2 import get_current_user
 from .. import database, models, token
 from sqlalchemy.orm import Session
 from ..hashing import Hash
@@ -30,4 +32,6 @@ def logout(response: Response, status_code = status.HTTP_200_OK):
     response.set_cookie(key="jwt_token", value="", expires=0)
     return {"message": "Logout successful"}
 
-
+@router.get('/status')
+async def check_status(current_user: models.User = Depends(get_current_user)):
+    return JSONResponse(content={"status": "authenticated", "user_id": current_user.id, "username": current_user.name})

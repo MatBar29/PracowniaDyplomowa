@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta
 from typing import Optional
-from fastapi import Response
+from fastapi import HTTPException, Response, status
 from jose import JWTError, jwt
 
 
@@ -19,23 +19,30 @@ def create_access_token(response: Response, data: dict, expires_delta: Optional[
     encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
     
     # Umieszczanie tokena w ciasteczku
-    response.set_cookie(key="jwt_token", value=encoded_jwt, httponly=True)
+    response.set_cookie(
+    key="jwt_token", 
+    value=encoded_jwt, 
+    httponly=True, 
+    secure=True,  # Używaj tylko w połączeniu HTTPS
+    samesite="Strict",  # W zależności od potrzeb możesz użyć "Lax" lub "Strict"
+    max_age=expires_delta
+)
     
     return encoded_jwt
 
-def verify_token(token: str, credentials_exception):
+def verify_token(token: str, credentials_exception: HTTPException):
     try:
-        # Dekodowanie tokenu
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        
         id: int = payload.get("id")
-        
         if id is None:
             raise credentials_exception
-        
-        return id  # Zwracamy ID użytkownika z tokenu
+        return id
     except JWTError:
-        raise credentials_exception
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
 
 # def verify_token(request: Request, credentials_exception):
