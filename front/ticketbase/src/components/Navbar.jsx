@@ -41,18 +41,18 @@ const Navbar = () => {
             {isAuthenticated ? (
               <>
                 <li className="nav-item">
-                  <Link className="btn btn-outline-light me-3" to="/home">
-                    Home
+                  <Link className="btn btn-outline-light me-3" to="/ticket-list">
+                    Lista
                   </Link>
                 </li>
                 <li className="nav-item">
                   <Link className="btn btn-outline-success me-3" to="/new-ticket">
-                    New Ticket
+                    Nowy Ticket
                   </Link>
                 </li>
                 <li className="nav-item">
                   <button className="btn btn-outline-danger" onClick={handleLogout}>
-                    Logout
+                    Wuloguj
                   </button>
                 </li>
               </>

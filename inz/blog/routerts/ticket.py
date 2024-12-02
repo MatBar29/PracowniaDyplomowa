@@ -7,9 +7,11 @@ from ..oauth2 import get_current_user, is_admin
 
 router = APIRouter(tags=['tickets'], prefix='/ticket')
 
-@router.get('/', response_model=List[schemas.ShowTicket])
-def all(db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user)):
-    return ticket.get_all(db)
+@router.get("/")
+def get_tickets(db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user)):
+    tickets = ticket.get_all(db, current_user)
+    return tickets
+
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Ticket, db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user)):

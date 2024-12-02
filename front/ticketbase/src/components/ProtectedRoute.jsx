@@ -1,15 +1,16 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Hook do uzyskania informacji o logowaniu
+import { useAuth } from '../context/AuthContext'; // Załóżmy, że masz AuthContext
 
 const ProtectedRoute = ({ children }) => {
-  const { isAuthenticated } = useAuth(); // Sprawdzamy, czy użytkownik jest zalogowany
+  const { isAuthenticated } = useAuth(); // Sprawdź, czy użytkownik jest zalogowany
 
   if (!isAuthenticated) {
-    return <Navigate to="/login" />; // Przekierowanie na stronę logowania, jeśli użytkownik nie jest zalogowany
+    // Jeśli użytkownik nie jest zalogowany, przekieruj go do logowania
+    return <Navigate to="/login" />;
   }
 
-  return children; // Jeśli użytkownik jest zalogowany, renderujemy przekazany komponent (Home)
+  return children; // Zwróć dzieci, jeśli użytkownik jest zalogowany
 };
 
 export default ProtectedRoute;

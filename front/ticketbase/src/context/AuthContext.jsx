@@ -1,43 +1,54 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import api from '../api';
 
-// Tworzymy kontekst
 export const AuthContext = createContext();
 
-// Komponent dostarczający kontekst
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(true); // Nowy stan
+  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);
 
-  // Sprawdzenie statusu autentykacji przy załadowaniu komponentu
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
         const response = await api.get('/login/status', { withCredentials: true });
         if (response.status === 200) {
           setIsAuthenticated(true);
+          setCurrentUser(response.data.user);
+        } else {
+          setIsAuthenticated(false);
+          setCurrentUser(null);
         }
       } catch (error) {
         setIsAuthenticated(false);
+        setCurrentUser(null);
       } finally {
-        setLoading(false); // Ustawienie loading na false po zakończeniu sprawdzania
+        setLoading(false);
       }
     };
-
     checkAuthStatus();
   }, []);
 
-  const login = () => setIsAuthenticated(true);
-  const logout = () => setIsAuthenticated(false);
+  const login = (user) => {
+    setIsAuthenticated(true);
+    setCurrentUser(user);
+    // Opcjonalnie: zapisuj dane użytkownika w localStorage
+    localStorage.setItem('user', JSON.stringify(user));
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    localStorage.removeItem('user');
+  };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, loading, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ isAuthenticated, currentUser, login, logout }}>
+      {loading ? <div>Loading...</div> : children}
     </AuthContext.Provider>
   );
 };
 
-// Hook do używania kontekstu
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

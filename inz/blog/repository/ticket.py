@@ -2,8 +2,20 @@ from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
 from .. import models, schemas
 
-def get_all(db: Session):
-    return db.query(models.Ticket).all()
+def get_all(db: Session, current_user: schemas.User):
+    if current_user.role == 'admin' or current_user.role == 'manager':
+        # Admin/Manager widzi wszystkie tickety
+        return db.query(models.Ticket).all()
+    elif current_user.role == 'service':
+        # Service widzi tickety przypisane do niego i te, które stworzył
+        return db.query(models.Ticket).filter(
+            (models.Ticket.user_id == current_user.id) |
+            (models.Ticket.assigned_to_id == current_user.id)
+        ).all()
+    else:
+        # Zwykły użytkownik widzi tylko swoje tickety
+        return db.query(models.Ticket).filter(models.Ticket.user_id == current_user.id).all()
+
 
 def create(request: schemas.Ticket, db: Session, current_user: schemas.User):
     new_ticket = models.Ticket(

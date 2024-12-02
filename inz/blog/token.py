@@ -20,14 +20,14 @@ def create_access_token(response: Response, data: dict, expires_delta: Optional[
     
     # Umieszczanie tokena w ciasteczku
     response.set_cookie(
-    key="jwt_token", 
-    value=encoded_jwt, 
-    httponly=True, 
-    secure=True,  # Używaj tylko w połączeniu HTTPS
-    samesite="Strict",  # W zależności od potrzeb możesz użyć "Lax" lub "Strict"
-    max_age=expires_delta
-)
-    
+        key="jwt_token", 
+        value=encoded_jwt, 
+        httponly=True, 
+        secure=False,  # W trakcie lokalnych testów ustaw secure=False
+        samesite="Strict", 
+        max_age=expires_delta
+    )
+
     return encoded_jwt
 
 def verify_token(token: str, credentials_exception: HTTPException):

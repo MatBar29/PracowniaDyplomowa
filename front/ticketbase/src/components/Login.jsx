@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
+import Cookies from 'js-cookie'; // Importuj js-cookie
+
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -13,19 +15,34 @@ const Login = () => {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-
+  
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
-
+  
     try {
-      await api.post("/login/", formData, { headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, withCredentials: true });
-      login(); 
-      navigate("/"); 
+      const response = await api.post("/login/", formData, { 
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        withCredentials: true 
+      });
+    
+      const token = response.data.token;  // Token jest teraz w odpowiedzi
+      if (token) {
+        Cookies.set('jwt_token', token, { expires: 7 });
+        login();
+        navigate("/"); 
+      }
     } catch (err) {
-      setError("Niepoprawne dane logowania");
+      if (err.response) {
+        setError(err.response.data.detail || 'Niepoprawne dane logowania');
+      } else {
+        setError('Wystąpił problem z połączeniem');
+      }
     }
   };
+  
+    
+  
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: '100vh' }}>
@@ -59,6 +76,11 @@ const Login = () => {
                 required
               />
             </div>
+
+            <div className="text-center mt-3">
+              <span>Nie masz konta? </span>
+              <a href="/register" className="text-primary">Zarejestruj się</a>
+          </div>
 
             <button type="submit" className="btn btn-primary w-100">Zaloguj się</button>
           </form>

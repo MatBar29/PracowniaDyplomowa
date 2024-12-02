@@ -22,8 +22,8 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends(), db
     # Utworzenie tokenu i zapisanie go w ciasteczku
     access_token = token.create_access_token(response=response, data={"sub": user.email, "id": user.id})
 
-    # Zapisanie tokenu w ciasteczku (to już robi funkcja `create_access_token`)
-    return {"message": "Login successful"}
+    return {"message": "Login successful", "token": access_token}  # Zwrócenie tokenu
+
 
 
 @router.post('/logout')
