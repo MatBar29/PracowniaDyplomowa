@@ -1,3 +1,12 @@
+/* Tło strony */
+body {
+  background-color: #ebebeb; /* Szary kolor tła */
+  font-family: Arial, sans-serif; /* Ustawienie domyślnej czcionki */
+  margin: 0; /* Usunięcie marginesu domyślnego */
+  padding: 0; /* Usunięcie paddingu domyślnego */
+}
+
+
 /* Stylizacja navbaru */
 .navbar-dark {
   background-color: #333 !important; /* Ciemne tło dla navbaru */
@@ -47,4 +56,68 @@
 .btn-outline-danger:hover {
   background-color: #dc3545 !important;
   color: white !important;
+}
+
+/* Stylizacja kontenera formularza na stronie AddTicket */
+.add-ticket-container {
+  background-color: white; /* Tło formularza */
+  padding: 30px; /* Padding wokół formularza */
+  max-width: 600px; /* Maksymalna szerokość formularza */
+  width: 100%; /* Formularz nie będzie szerszy niż 600px */
+  box-sizing: border-box;
+  border-radius: 8px; /* Zaokrąglone rogi formularza */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Delikatny cień */
+  margin: 100px auto 0; /* Wyśrodkowanie formularza */
+}
+
+.add-ticket-container h2 {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 20px; /* Odstęp między tytułem a formularzem */
+  text-align: center;
+}
+
+/* Stylizacja etykiet formularza */
+.add-ticket-container .form-label {
+  font-size: 1rem;
+  color: #555;
+  margin-bottom: 10px; /* Odstęp między etykietą a polem */
+}
+
+/* Stylizacja pól formularza */
+.add-ticket-container .form-control {
+  width: 100%; /* Pełna szerokość formularza */
+  padding: 12px; /* Większy padding dla lepszego wyglądu */
+  margin-bottom: 20px; /* Odstęp między polami */
+  border-radius: 6px; /* Zaokrąglone rogi */
+  border: 1px solid #ddd; /* Delikatna ramka */
+  background-color: #f9f9f9; /* Tło pól */
+  font-size: 1rem;
+}
+
+/* Przycisk formularza */
+.add-ticket-container .btn {
+  width: 100%; /* Pełna szerokość przycisku */
+  padding: 14px;
+  border-radius: 6px; /* Zaokrąglone rogi przycisku */
+  background-color: #007bff; /* Niebieskie tło */
+  color: white;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+}
+
+.add-ticket-container .btn:hover {
+  background-color: #0056b3; /* Ciemniejszy niebieski na hover */
+}
+
+/* Komunikaty o błędach */
+.add-ticket-container .alert {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #dc3545; /* Czerwony kolor dla błędów */
+  color: white;
+  border-radius: 4px;
+  text-align: center;
 }

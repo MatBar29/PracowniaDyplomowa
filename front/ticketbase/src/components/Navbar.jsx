@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext'; // Hook do używania kontekstu
 import api from '../api';
 
+
 const Navbar = () => {
   const { isAuthenticated, logout } = useAuth(); // Sprawdzamy stan logowania
   const navigate = useNavigate();
@@ -14,6 +15,7 @@ const Navbar = () => {
       navigate("/"); // Przekierowanie na stronę główną
     } catch (error) {
       console.error("Logout error:", error);
+      alert("An error occurred while logging out. Please try again.");
     }
   };
 
@@ -54,7 +56,13 @@ const Navbar = () => {
                   </button>
                 </li>
               </>
-            ) : null} {/* Jeśli użytkownik nie jest zalogowany, nie wyświetlamy nic */}
+            ) : (
+              <li className="nav-item">
+                <Link className="btn btn-outline-primary" to="/login">
+                  Login
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       </div>

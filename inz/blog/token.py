@@ -43,26 +43,3 @@ def verify_token(token: str, credentials_exception: HTTPException):
             detail="Could not validate credentials",
             headers={"WWW-Authenticate": "Bearer"},
         )
-
-
-# def verify_token(request: Request, credentials_exception):
-#     token = request.cookies.get("jwt_token")  # Pobranie tokena z cookies
-#     if not token:
-#         raise credentials_exception
-            
-#     try:
-#         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-#         email: str = payload.get("sub")
-#         user_id: int = payload.get("id")
-#         role: str = payload.get("role")
-
-#         if email is None or user_id is None:
-#             raise credentials_exception
-                
-#         token_data = TokenData(id=user_id, email=email, role=role)
-        
-#         return token_data
-            
-#     except JWTError:
-#         raise credentials_exception
-

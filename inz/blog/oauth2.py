@@ -6,7 +6,6 @@ from . import token
 from sqlalchemy.orm import Session
 from .database import get_db
 
-
 # Używamy OAuth2PasswordBearer, aby uzyskać token w nagłówku
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
@@ -32,15 +31,11 @@ def get_current_user(request: Request, db: Session = Depends(get_db)):
     
     return user  # Zwróć pełny obiekt użytkownika, nie tylko ID
 
-
-
 def is_admin(
-    token_data=Depends(get_current_user),
-    db: Session = Depends(get_db)
+    user: User = Depends(get_current_user)
 ):
-    user = db.query(User).filter(User.id == token_data.id).first()
-
-    if user is None or user.role != RoleEnum.admin:
+    # Sprawdzanie, czy użytkownik ma rolę admina
+    if user.role != RoleEnum.admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Niedozwolony dostęp"

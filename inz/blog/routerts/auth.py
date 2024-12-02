@@ -34,4 +34,5 @@ def logout(response: Response, status_code = status.HTTP_200_OK):
 
 @router.get('/status')
 async def check_status(current_user: models.User = Depends(get_current_user)):
-    return JSONResponse(content={"status": "authenticated", "user_id": current_user.id, "username": current_user.name})
+    return {"status": "authenticated", "user_id": current_user.id, "username": current_user.name}
+
