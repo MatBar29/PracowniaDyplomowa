@@ -1,19 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import api from '../api';
+import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const TicketList = () => {
-  const { isAuthenticated } = useAuth(); // Zakładam, że masz dostęp do isAuthenticated
+  const { isAuthenticated, currentUser } = useAuth(); // Zakładam, że masz dostęp do isAuthenticated i currentUser
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  // Nowy stan dla roli użytkownika
+  const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
     if (isAuthenticated) {
       const fetchTickets = async () => {
         try {
           const response = await api.get('/ticket');
-          console.log('Odpowiedź z backendu:', response); // Debugowanie odpowiedzi z serwera
           setTickets(response.data);
           setLoading(false);
         } catch (error) {
@@ -23,9 +28,20 @@ const TicketList = () => {
         }
       };
 
+      const fetchUserStatus = async () => {
+        try {
+          const response = await api.get('/user/status/', { withCredentials: true });
+          setUserRole(response.data.role);  // Ustawiamy rolę użytkownika
+        } catch (error) {
+          console.error('Błąd przy pobieraniu danych użytkownika:', error);
+        }
+      };
+      
+
       fetchTickets();
+      fetchUserStatus();  // Pobranie statusu użytkownika (rola)
     } else {
-      setLoading(false); // Ustawienie na false, jeśli użytkownik nie jest zalogowany
+      setLoading(false);
     }
   }, [isAuthenticated]);
 
@@ -61,8 +77,21 @@ const TicketList = () => {
                 <td>{ticket.priority}</td>
                 <td>{ticket.assigned_to ? ticket.assigned_to.name : 'Nieprzypisane'}</td>
                 <td>
-                  <button className="btn btn-warning btn-sm">Edytuj</button>
-                  <button className="btn btn-danger btn-sm ml-2">Usuń</button>
+                  {/* Sprawdzamy rolę użytkownika przed wyświetleniem opcji "Edytuj" i "Usuń" */}
+                  {userRole === 'admin'? (
+                    <>
+                      <Link to={`/tickets/edit/${ticket.id}`} className="btn btn-warning btn-sm">
+                        <FontAwesomeIcon icon={faEdit} />
+                        Edytuj
+                      </Link>
+                      <button className="btn btn-danger btn-sm ml-2">
+                        <FontAwesomeIcon icon={faTrash} />
+                        Usuń
+                      </button>
+                    </>
+                  ) : (
+                    <span>Brak dostępu</span> // Alternatywnie możesz wyświetlić komunikat, że użytkownik nie ma dostępu
+                  )}
                 </td>
               </tr>
             ))}

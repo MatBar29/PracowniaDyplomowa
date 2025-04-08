@@ -1,4 +1,6 @@
 from fastapi import APIRouter, Depends, status, Response
+
+from blog.enum_models import RoleEnum
 from .. import schemas, database
 from typing import List
 from sqlalchemy.orm import Session
@@ -10,8 +12,7 @@ router = APIRouter(tags=['tickets'], prefix='/ticket')
 @router.get("/")
 def get_tickets(db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user)):
     tickets = ticket.get_all(db, current_user)
-    return tickets
-
+    return tickets  # Zwracaj dane w odpowiedzi
 
 @router.post('/', status_code=status.HTTP_201_CREATED)
 def create(request: schemas.Ticket, db: Session = Depends(database.get_db), current_user: schemas.User = Depends(get_current_user)):

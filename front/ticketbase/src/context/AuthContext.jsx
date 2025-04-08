@@ -14,7 +14,8 @@ export const AuthProvider = ({ children }) => {
         const response = await api.get('/login/status', { withCredentials: true });
         if (response.status === 200) {
           setIsAuthenticated(true);
-          setCurrentUser(response.data.user);
+          setCurrentUser(response.data.user); // Sprawdź, czy response.data.user zawiera role
+          console.log("Current user:", response.data.user); // Dodaj to w celu debugowania
         } else {
           setIsAuthenticated(false);
           setCurrentUser(null);
@@ -28,6 +29,7 @@ export const AuthProvider = ({ children }) => {
     };
     checkAuthStatus();
   }, []);
+  
 
   const login = (user) => {
     setIsAuthenticated(true);

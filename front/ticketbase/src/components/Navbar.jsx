@@ -52,7 +52,7 @@ const Navbar = () => {
                 </li>
                 <li className="nav-item">
                   <button className="btn btn-outline-danger" onClick={handleLogout}>
-                    Wuloguj
+                    Wyloguj
                   </button>
                 </li>
               </>
