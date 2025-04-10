@@ -9,6 +9,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import TicketList from './components/TicketList';
 import TicketEdit from './components/TicketEdit';
 import './App.css';
+import TicketDetails from './components/TicketDetails';
 
 
 function App() {
@@ -48,6 +49,14 @@ function App() {
           element={
             <ProtectedRoute>
               <TicketEdit />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/tickets/:id"
+          element={
+            <ProtectedRoute>
+              <TicketDetails />
             </ProtectedRoute>
           }
         />

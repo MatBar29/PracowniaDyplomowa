@@ -16,9 +16,8 @@ const TicketEdit = () => {
     assigned_to: ''
   });
   const [error, setError] = useState(null);
-  const [userRole, setUserRole] = useState(null); // Nowy stan do przechowywania roli użytkownika
+  const [userRole, setUserRole] = useState(null);
 
-  // Pobierz ticketa
   useEffect(() => {
     const fetchTicket = async () => {
       try {
@@ -35,20 +34,18 @@ const TicketEdit = () => {
     };
 
     const fetchUsers = async () => {
-        try {
-          const res = await api.get('/user/service/');
-          console.log("Użytkownicy: ", res.data); // Sprawdzanie odpowiedzi
-          setUsers(res.data);
-        } catch (err) {
-          console.error('Błąd przy pobieraniu użytkowników:', err);
-        }
-      };
-      
+      try {
+        const res = await api.get('/user/service/');
+        setUsers(res.data);
+      } catch (err) {
+        console.error('Błąd przy pobieraniu użytkowników:', err);
+      }
+    };
 
     const fetchUserStatus = async () => {
       try {
         const response = await api.get('/user/status/', { withCredentials: true });
-        setUserRole(response.data.role);  // Ustawiamy rolę użytkownika
+        setUserRole(response.data.role);
       } catch (error) {
         console.error('Błąd przy pobieraniu danych użytkownika:', error);
       }
@@ -78,77 +75,86 @@ const TicketEdit = () => {
     }
   };
 
-  if (!ticket) return <div>Ładowanie danych ticketa...</div>;
+  if (!ticket) return <div className="text-center mt-5">Ładowanie danych ticketa...</div>;
 
   return (
-    <div className="container mt-4">
-      <h2 className="text-center mb-4">Edytuj Ticket</h2>
-      {error && <div className="alert alert-danger">{error}</div>}
-      {userRole === 'admin' || userRole === 'service' ? (
-        <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Status</label>
-            <select
-              className="form-control"
-              name="status"
-              value={formData.status}
-              onChange={handleChange}
-            >
-              <option value="">-- Wybierz --</option>
-              <option value="open">Otwarty</option>
-              <option value="in_progress">W trakcie</option>
-              <option value="closed">Zamknięty</option>
-            </select>
-          </div>
+    <div className="container mt-5">
+      <div className="card shadow border-0">
+        <div className="card-body">
+          <h3 className="card-title text-center mb-4">Edytuj Ticket</h3>
 
-          <div className="form-group mt-3">
-            <label>Priorytet</label>
-            <select
-              className="form-control"
-              name="priority"
-              value={formData.priority}
-              onChange={handleChange}
-            >
-              <option value="">-- Wybierz --</option>
-              <option value="low">Niski</option>
-              <option value="medium">Średni</option>
-              <option value="high">Wysoki</option>
-            </select>
-          </div>
+          {error && <div className="alert alert-danger">{error}</div>}
 
-          <div className="form-group mt-3">
-            <label>Przypisz do</label>
-            <select
-              className="form-control"
-              name="assigned_to"
-              value={formData.assigned_to || ''}
-              onChange={handleChange}
-            >
-              <option value="">-- Nieprzypisane --</option>
-              {users.map(user => (
-                <option key={user.id} value={user.id}>
-                  {user.name} ({user.role})
-                </option>
-              ))}
-            </select>
-          </div>
+          {userRole === 'admin' || userRole === 'service' ? (
+            <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+              <div>
+                <label className="form-label fw-bold">Status</label>
+                <select
+                  className="form-select"
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                >
+                  <option value="">-- Wybierz --</option>
+                  <option value="new">Nowy</option>
+                  <option value="in_progress">W trakcie</option>
+                  <option value="resolved">Rozwiązany</option>
+                  <option value="closed">Zamknięty</option>
+                </select>
+              </div>
 
-          <div className="mt-4 d-flex justify-content-between">
-            <button className="btn btn-primary" type="submit">
-              <FontAwesomeIcon icon={faSave} className="mr-2" /> Zapisz zmiany
-            </button>
-            <button
-              type="button"
-              className="btn btn-secondary"
-              onClick={() => navigate('/ticket-list')}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} className="mr-2" /> Powrót do listy
-            </button>
-          </div>
-        </form>
-      ) : (
-        <div className="alert alert-danger">Brak uprawnień do edycji tego ticketu.</div>
-      )}
+              <div>
+                <label className="form-label fw-bold">Priorytet</label>
+                <select
+                  className="form-select"
+                  name="priority"
+                  value={formData.priority}
+                  onChange={handleChange}
+                >
+                  <option value="">-- Wybierz --</option>
+                  <option value="low">Niski</option>
+                  <option value="medium">Średni</option>
+                  <option value="high">Wysoki</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="form-label fw-bold">Przypisz do</label>
+                <select
+                  className="form-select"
+                  name="assigned_to"
+                  value={formData.assigned_to || ''}
+                  onChange={handleChange}
+                >
+                  <option value="">-- Nieprzypisane --</option>
+                  {users.map(user => (
+                    <option key={user.id} value={user.id}>
+                      {user.name} ({user.role})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="d-flex justify-content-between mt-4">
+                <button className="btn btn-primary" type="submit">
+                  <FontAwesomeIcon icon={faSave} className="me-2" />
+                  Zapisz zmiany
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => navigate('/ticket-list')}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} className="me-2" />
+                  Powrót do listy
+                </button>
+              </div>
+            </form>
+          ) : (
+            <div className="alert alert-danger mt-3">Brak uprawnień do edycji tego ticketu.</div>
+          )}
+        </div>
+      </div>
     </div>
   );
 };
