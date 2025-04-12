@@ -10,6 +10,7 @@ import TicketList from './components/TicketList';
 import TicketEdit from './components/TicketEdit';
 import './App.css';
 import TicketDetails from './components/TicketDetails';
+import AdminPanel from './components/AdminPanel';
 
 
 function App() {
@@ -57,6 +58,14 @@ function App() {
           element={
             <ProtectedRoute>
               <TicketDetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
             </ProtectedRoute>
           }
         />

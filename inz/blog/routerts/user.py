@@ -17,6 +17,10 @@ get_db = database.get_db
 def create(request: schemas.User, db: Session = Depends(get_db)):
     return user.create(request, db)
 
+@router.get('/status', response_model=schemas.ShowUser)
+async def check_status(current_user: models.User = Depends(get_current_user)):
+    return current_user  # teraz zwraca cały obiekt użytkownika, łącznie z role
+
 @router.get('/{id}',response_model=schemas.ShowUser)
 def show(id: int, db: Session = Depends(get_db)):
     return user.show(id, db)
@@ -38,6 +42,4 @@ def get_service_and_admin_users(db: Session = Depends(get_db)):
         )
     ).all()
 
-@router.get("/status/", response_model=schemas.User)
-def get_user_status(user: models.User = Depends(get_current_user)):
-    return user  # Zwracamy pełne dane użytkownika
+

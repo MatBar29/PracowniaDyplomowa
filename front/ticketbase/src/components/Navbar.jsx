@@ -1,21 +1,20 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Hook do używania kontekstu
+import { useAuth } from '../context/AuthContext';
 import api from '../api';
 
-
 const Navbar = () => {
-  const { isAuthenticated, logout } = useAuth(); // Sprawdzamy stan logowania
+  const { isAuthenticated, logout, currentUser } = useAuth(); // Dodano currentUser
   const navigate = useNavigate();
 
   const handleLogout = async () => {
     try {
-      await api.post("/login/logout", {}, { withCredentials: true }); // Wylogowanie
-      logout(); // Zmiana stanu logowania w kontekście
-      navigate("/"); // Przekierowanie na stronę główną
+      await api.post("/login/logout", {}, { withCredentials: true });
+      logout();
+      navigate("/");
     } catch (error) {
       console.error("Logout error:", error);
-      alert("An error occurred while logging out. Please try again.");
+      alert("Wystąpił błąd podczas wylogowywania. Spróbuj ponownie.");
     }
   };
 
@@ -50,6 +49,13 @@ const Navbar = () => {
                     Nowy Ticket
                   </Link>
                 </li>
+                {currentUser?.role === 'admin' && (
+                  <li className="nav-item">
+                    <Link className="btn btn-outline-warning me-3" to="/admin">
+                      Panel Admina
+                    </Link>
+                  </li>
+                )}
                 <li className="nav-item">
                   <button className="btn btn-outline-danger" onClick={handleLogout}>
                     Wyloguj

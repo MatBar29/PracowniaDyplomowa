@@ -38,9 +38,10 @@ class ShowUser(BaseModel):
         orm_mode = True
 
 class ShowUserT(BaseModel):
+    id: int
     name: str
     email: str
-    role: Optional[RoleEnum] = 'user'
+    role: RoleEnum
 
     class Config:
         orm_mode = True

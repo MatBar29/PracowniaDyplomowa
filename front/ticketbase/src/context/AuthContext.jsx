@@ -11,15 +11,10 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const checkAuthStatus = async () => {
       try {
-        const response = await api.get('/login/status', { withCredentials: true });
-        if (response.status === 200) {
-          setIsAuthenticated(true);
-          setCurrentUser(response.data.user); // Sprawdź, czy response.data.user zawiera role
-          console.log("Current user:", response.data.user); // Dodaj to w celu debugowania
-        } else {
-          setIsAuthenticated(false);
-          setCurrentUser(null);
-        }
+        const response = await api.get('/user/status/', { withCredentials: true });
+        setIsAuthenticated(true);
+        setCurrentUser(response.data); // response.data zawiera: id, name, email, role
+        console.log("Current user:", response.data);
       } catch (error) {
         setIsAuthenticated(false);
         setCurrentUser(null);
@@ -29,7 +24,6 @@ export const AuthProvider = ({ children }) => {
     };
     checkAuthStatus();
   }, []);
-  
 
   const login = (user) => {
     setIsAuthenticated(true);
