@@ -10,27 +10,30 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   
-  const { login } = useAuth();
+  const { login } = useAuth(); // zostaje
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
-  
+
     const formData = new URLSearchParams();
     formData.append('username', email);
     formData.append('password', password);
-  
+
     try {
       const response = await api.post("/login/", formData, { 
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         withCredentials: true 
       });
-    
-      const token = response.data.token;  // Token jest teraz w odpowiedzi
+
+      const token = response.data.token;
       if (token) {
         Cookies.set('jwt_token', token, { expires: 7 });
-        login();
-        navigate("/"); 
+
+        // 🟡 Pobierz status użytkownika z backendu (w tym rolę!)
+        const statusResponse = await api.get("/user/status/", { withCredentials: true });
+        login(statusResponse.data); // 🟢 Teraz ustawiamy currentUser z pełną rolą
+        navigate("/");
       }
     } catch (err) {
       if (err.response) {
@@ -40,6 +43,7 @@ const Login = () => {
       }
     }
   };
+
   
     
   

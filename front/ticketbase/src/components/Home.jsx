@@ -1,67 +1,78 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext'; // Hook do używania kontekstu
+import { useAuth } from '../context/AuthContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch, faBell, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
 
 const Home = () => {
   const navigate = useNavigate();
-
-  const handleNewTicket = () => {
-    navigate('/new-ticket'); // Przekierowanie do strony tworzenia nowego zgłoszenia
-  };
 
   return (
     <div className="container mt-5">
       {/* Hero Section */}
       <div className="row mb-5 text-center">
         <div className="col">
-          <h1 className="display-1">Witamy w TicketBase</h1>
-          <p className="lead text-muted">Twój zaufany asystent zgłoszeń!</p>
+          <h1 className="display-1 fw-bold text-primary">🎫 TicketBase</h1>
+          <p className="lead text-muted fs-4">Twój zaufany asystent zgłoszeń!</p>
         </div>
       </div>
 
-    {/* About Us Section */}
-    <div className="row mb-5">
-      <div className="col-md-6">
-        <h2 className="h2 fs-1">O TicketBase</h2> {/* Zwiększ rozmiar czcionki dla nagłówka */}
-        <p className="fs-4">TicketBase to narzędzie zaprojektowane aby ułatwić ci zgłaszanie twoich problemów oraz monitorowanie stanu twojego zgłoszenia. Ułatwia on również szybkie reagowanie oraz rozwiązywanie problemów naszemu supportowi aby jak najlepiej i najszybciej pomóc ci w twojej potrzebie</p>
+      {/* About Us */}
+      <div className="row mb-5 align-items-center">
+        <div className="col-md-6">
+          <h2 className="fs-1 mb-3 fw-semibold">O TicketBase</h2>
+          <p className="fs-5 text-secondary">
+            TicketBase to narzędzie zaprojektowane, aby ułatwić ci zgłaszanie problemów oraz monitorowanie ich stanu. Nasz zespół supportu reaguje szybko, by zapewnić ci jak najlepszą pomoc.
+          </p>
+        </div>
+        <div className="col-md-6">
+          <img src="/img1.jpg" alt="TicketBase" className="img-fluid rounded shadow-sm" />
+        </div>
       </div>
-      <div className="col-md-6">
-        <img src="/img1.jpg" alt="About TicketBase" className="img-fluid rounded" />
-      </div>
-    </div>
 
-
-      {/* Recommended Features Section */}
+      {/* Features */}
       <div className="row">
         <div className="col-md-4 mb-4">
-          <div className="card shadow-lg">
+          <div className="card h-100 shadow-sm border-0">
             <img src="https://via.placeholder.com/350x150" className="card-img-top" alt="Manage Tickets" />
-            <div className="card-body">
-              <h5 className="card-title">Manage Your Tickets</h5>
-              <p className="card-text">View, update, and track the status of your open and past tickets.</p>
-              <button className="btn btn-outline-primary" onClick={() => navigate('/my-tickets')}>View Tickets</button>
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 className="card-title fw-bold"><FontAwesomeIcon icon={faTicketAlt} className="me-2 text-primary" />Zarządzaj zgłoszeniami</h5>
+                <p className="card-text text-muted">Przeglądaj, edytuj i śledź status swoich zgłoszeń w jednym miejscu.</p>
+              </div>
+              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/my-tickets')}>
+                Przejdź do zgłoszeń
+              </button>
             </div>
           </div>
         </div>
 
         <div className="col-md-4 mb-4">
-          <div className="card shadow-lg">
+          <div className="card h-100 shadow-sm border-0">
             <img src="https://via.placeholder.com/350x150" className="card-img-top" alt="Search Tickets" />
-            <div className="card-body">
-              <h5 className="card-title">Search Tickets</h5>
-              <p className="card-text">Easily find specific tickets by using the advanced search functionality.</p>
-              <button className="btn btn-outline-primary" onClick={() => navigate('/search-tickets')}>Search Tickets</button>
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 className="card-title fw-bold"><FontAwesomeIcon icon={faSearch} className="me-2 text-primary" />Wyszukaj zgłoszenie</h5>
+                <p className="card-text text-muted">Znajduj zgłoszenia szybko dzięki inteligentnemu filtrowaniu i wyszukiwaniu.</p>
+              </div>
+              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/search-tickets')}>
+                Wyszukaj zgłoszenie
+              </button>
             </div>
           </div>
         </div>
 
         <div className="col-md-4 mb-4">
-          <div className="card shadow-lg">
+          <div className="card h-100 shadow-sm border-0">
             <img src="https://via.placeholder.com/350x150" className="card-img-top" alt="Notifications" />
-            <div className="card-body">
-              <h5 className="card-title">Ticket Notifications</h5>
-              <p className="card-text">Receive real-time updates when your ticket status changes or when a response is posted.</p>
-              <button className="btn btn-outline-primary" onClick={() => navigate('/notifications')}>View Notifications</button>
+            <div className="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 className="card-title fw-bold"><FontAwesomeIcon icon={faBell} className="me-2 text-primary" />Powiadomienia</h5>
+                <p className="card-text text-muted">Otrzymuj na bieżąco powiadomienia o odpowiedziach i zmianie statusu.</p>
+              </div>
+              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/notifications')}>
+                Zobacz powiadomienia
+              </button>
             </div>
           </div>
         </div>

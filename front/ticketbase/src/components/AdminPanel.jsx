@@ -6,7 +6,7 @@ const AdminPanel = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
-  const [roleFilter, setRoleFilter] = useState('all');
+  const [selectedUser, setSelectedUser] = useState(null);
   const [emailSearch, setEmailSearch] = useState('');
 
   useEffect(() => {
@@ -34,16 +34,20 @@ const AdminPanel = () => {
       setUsers(prev =>
         prev.map(user => (user.email === email ? { ...user, role: newRole } : user))
       );
+      if (selectedUser?.email === email) {
+        setSelectedUser(prev => ({ ...prev, role: newRole }));
+      }
     } catch (err) {
       alert('Nie udało się zaktualizować roli.');
     }
   };
 
-  const filteredUsers = users.filter(user => {
-    const matchRole = roleFilter === 'all' || user.role === roleFilter;
-    const matchEmail = user.email.toLowerCase().includes(emailSearch.toLowerCase());
-    return matchRole && matchEmail;
-  });
+  const serviceAndAdminUsers = users.filter(user => user.role === 'admin' || user.role === 'service');
+  const otherUsers = users.filter(user =>
+    user.role !== 'admin' &&
+    user.role !== 'service' &&
+    user.email.toLowerCase().includes(emailSearch.toLowerCase())
+  );
 
   if (loading) return <div className="text-center mt-5">Ladowanie danych...</div>;
   if (error) return <div className="alert alert-danger mt-4 text-center">{error}</div>;
@@ -53,46 +57,78 @@ const AdminPanel = () => {
       <h2 className="mb-4 text-center">Panel Administratora</h2>
 
       {userRole === 'admin' ? (
-        <>
-          <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-2">
-            <input
-              type="text"
-              className="form-control w-100 w-md-50"
-              placeholder="Szukaj po email..."
-              value={emailSearch}
-              onChange={(e) => setEmailSearch(e.target.value)}
-            />
-            <select
-              className="form-select w-100 w-md-25"
-              value={roleFilter}
-              onChange={(e) => setRoleFilter(e.target.value)}
-            >
-              <option value="all">Wszystkie role</option>
-              <option value="user">user</option>
-              <option value="service">service</option>
-              <option value="menager">menager</option>
-              <option value="admin">admin</option>
-            </select>
+        <div className="row">
+          {/* Left panel: current admins and service users */}
+          <div className="col-md-4">
+            <div className="card shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title">Użytkownicy z rolą admin/service</h5>
+                <ul className="list-group">
+                  {serviceAndAdminUsers.map(user => (
+                    <li key={user.id} className="list-group-item">
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <span>{user.name}</span>
+                          <div className="text-muted small">{user.email}</div>
+                        </div>
+                        <select
+                          className="form-select w-auto"
+                          value={user.role}
+                          onChange={(e) => handleRoleChange(user.email, e.target.value)}
+                        >
+                          <option value="user">user</option>
+                          <option value="service">service</option>
+                          <option value="menager">menager</option>
+                          <option value="admin">admin</option>
+                        </select>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
 
-          <div className="d-flex flex-column gap-3">
-            {filteredUsers.map(user => (
-              <div key={user.id} className="card shadow-sm bg-light border-0">
-                <div className="card-body d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-                  <div className="mb-3 mb-md-0">
-                    <h5 className="mb-1">{user.name}</h5>
-                    <p className="mb-1"><strong>Email:</strong> {user.email}</p>
-                    <p className="mb-0">
-                      <strong>Aktualna rola:</strong>{' '}
-                      <span className="badge bg-secondary">{user.role}</span>
-                    </p>
-                  </div>
-                  <div>
-                    <label className="form-label mb-1 fw-bold">Zmień rolę</label>
+          {/* Right panel: assign role */}
+          <div className="col-md-8">
+            <div className="card shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title mb-3">Przypisz rolę użytkownikowi</h5>
+
+                <input
+                  type="text"
+                  className="form-control mb-4"
+                  placeholder="Szukaj po email..."
+                  value={emailSearch}
+                  onChange={(e) => setEmailSearch(e.target.value)}
+                />
+
+                <div className="d-flex flex-column gap-3">
+                  {otherUsers.map(user => (
+                    <div
+                      key={user.id}
+                      className={`card p-3 ${selectedUser?.id === user.id ? 'border-primary border-2' : ''}`}
+                      style={{ cursor: 'pointer' }}
+                      onClick={() => setSelectedUser(user)}
+                    >
+                      <div className="d-flex justify-content-between align-items-center">
+                        <div>
+                          <h6 className="mb-1">{user.name}</h6>
+                          <p className="mb-0 text-muted small">{user.email}</p>
+                        </div>
+                        <span className="badge bg-secondary text-uppercase">{user.role}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {selectedUser && (
+                  <div className="mt-4">
+                    <h6 className="fw-bold">Zmień rolę dla: {selectedUser.name}</h6>
                     <select
-                      className="form-select"
-                      value={user.role}
-                      onChange={(e) => handleRoleChange(user.email, e.target.value)}
+                      className="form-select mt-2"
+                      value={selectedUser.role}
+                      onChange={(e) => handleRoleChange(selectedUser.email, e.target.value)}
                     >
                       <option value="user">user</option>
                       <option value="service">service</option>
@@ -100,11 +136,11 @@ const AdminPanel = () => {
                       <option value="admin">admin</option>
                     </select>
                   </div>
-                </div>
+                )}
               </div>
-            ))}
+            </div>
           </div>
-        </>
+        </div>
       ) : (
         <div className="alert alert-danger text-center">
           Brak dostępu – tylko administrator może zarządzać rolami użytkowników.
