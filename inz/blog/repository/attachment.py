@@ -18,5 +18,6 @@ def create_attachment(ticket_id: int, file: UploadFile, db: Session):
     db.refresh(new_attachment)
     return new_attachment
 
-def get_attachments(id: int, db: Session):
-    return db.query(models.Attachment).filter(models.Attachment.id == id).all()
+def get_attachments(ticket_id: int, db: Session):
+    return db.query(models.Attachment).filter(models.Attachment.ticket_id == ticket_id).all()
+

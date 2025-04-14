@@ -2,7 +2,14 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faSearch, faBell, faTicketAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTicketAlt,
+  faPlusCircle,     // ← DODAJ TO
+  faEye,
+  faSearch,
+  faBell
+} from '@fortawesome/free-solid-svg-icons';
+
 
 const Home = () => {
   const navigate = useNavigate();
@@ -30,48 +37,35 @@ const Home = () => {
         </div>
       </div>
 
-      {/* Features */}
       <div className="row">
-        <div className="col-md-4 mb-4">
+        <div className="col-md-6 mb-4">
           <div className="card h-100 shadow-sm border-0">
-            <img src="https://via.placeholder.com/350x150" className="card-img-top" alt="Manage Tickets" />
             <div className="card-body d-flex flex-column justify-content-between">
               <div>
-                <h5 className="card-title fw-bold"><FontAwesomeIcon icon={faTicketAlt} className="me-2 text-primary" />Zarządzaj zgłoszeniami</h5>
-                <p className="card-text text-muted">Przeglądaj, edytuj i śledź status swoich zgłoszeń w jednym miejscu.</p>
+                <h5 className="card-title fw-bold">
+                  <FontAwesomeIcon icon={faTicketAlt} className="me-2 text-primary" />Zarządzaj zgłoszeniami
+                </h5>
+                <p className="card-text text-muted">Zobacz wszystkie zgłoszenia, filtruj, edytuj i rozwiązuj problemy.</p>
               </div>
-              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/my-tickets')}>
-                Przejdź do zgłoszeń
+              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/ticket-list')}>
+                Przejdź do listy
               </button>
             </div>
           </div>
         </div>
 
-        <div className="col-md-4 mb-4">
+        <div className="col-md-6 mb-4">
           <div className="card h-100 shadow-sm border-0">
-            <img src="https://via.placeholder.com/350x150" className="card-img-top" alt="Search Tickets" />
             <div className="card-body d-flex flex-column justify-content-between">
               <div>
-                <h5 className="card-title fw-bold"><FontAwesomeIcon icon={faSearch} className="me-2 text-primary" />Wyszukaj zgłoszenie</h5>
-                <p className="card-text text-muted">Znajduj zgłoszenia szybko dzięki inteligentnemu filtrowaniu i wyszukiwaniu.</p>
+                <h5 className="card-title fw-bold">
+                  <FontAwesomeIcon icon={faPlusCircle} className="me-2 text-success" />Nowe zgłoszenie
+                </h5>
+                <p className="card-text text-muted">Masz problem? Zgłoś go szybko i łatwo, a my zajmiemy się resztą.</p>
               </div>
-              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/search-tickets')}>
-                Wyszukaj zgłoszenie
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="col-md-4 mb-4">
-          <div className="card h-100 shadow-sm border-0">
-            <img src="https://via.placeholder.com/350x150" className="card-img-top" alt="Notifications" />
-            <div className="card-body d-flex flex-column justify-content-between">
-              <div>
-                <h5 className="card-title fw-bold"><FontAwesomeIcon icon={faBell} className="me-2 text-primary" />Powiadomienia</h5>
-                <p className="card-text text-muted">Otrzymuj na bieżąco powiadomienia o odpowiedziach i zmianie statusu.</p>
-              </div>
-              <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/notifications')}>
-                Zobacz powiadomienia
+              <button className="btn btn-success mt-3" onClick={() => navigate('/new-ticket')}>
+                <FontAwesomeIcon className="me-2" />
+                Utwórz zgłoszenie
               </button>
             </div>
           </div>

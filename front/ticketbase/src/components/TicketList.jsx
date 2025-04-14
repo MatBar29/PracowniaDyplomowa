@@ -39,14 +39,15 @@ const TicketList = () => {
       const fetchTickets = async () => {
         try {
           const response = await api.get('/ticket');
-          setTickets(response.data);
+          const sorted = response.data.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+          setTickets(sorted);
           setLoading(false);
         } catch (error) {
           console.error('Błąd podczas pobierania ticketów:', error);
           setError('Błąd podczas pobierania ticketów');
           setLoading(false);
         }
-      };
+      };      
 
       const fetchUserStatus = async () => {
         try {

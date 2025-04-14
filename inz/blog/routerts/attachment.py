@@ -23,4 +23,4 @@ def get_attachments(
     db: Session = Depends(database.get_db),
     current_user: schemas.User = Depends(get_current_user)
 ):
-    return attachment.get_attachments(id=id, db=db)
+    return attachment.get_attachments(ticket_id=id, db=db)

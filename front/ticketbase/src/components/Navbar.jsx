@@ -3,7 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTicketAlt, faPlus, faSignOutAlt, faUserShield, faSignInAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTicketAlt, faPlus, faSignOutAlt,
+  faUserShield, faSignInAlt, faUserCircle
+} from '@fortawesome/free-solid-svg-icons';
 
 const Navbar = () => {
   const { isAuthenticated, logout, currentUser } = useAuth();
@@ -56,24 +59,40 @@ const Navbar = () => {
                     Nowy Ticket
                   </Link>
                 </li>
-                {currentUser?.role === 'admin' && (
-                  <li className="nav-item">
-                    <Link className="btn btn-outline-warning btn-sm" to="/admin">
-                      <FontAwesomeIcon icon={faUserShield} className="me-1" />
-                      Panel Admina
-                    </Link>
-                  </li>
-                )}
-                <li className="nav-item">
-                  <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>
-                    <FontAwesomeIcon icon={faSignOutAlt} className="me-1" />
-                    Wyloguj
+
+                {/* Dropdown */}
+                <li className="nav-item dropdown">
+                  <button
+                    className="btn btn-outline-secondary btn-sm dropdown-toggle d-flex align-items-center"
+                    id="userDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    <FontAwesomeIcon icon={faUserCircle} className="me-2" />
+                    {currentUser?.name}
                   </button>
-                </li>
-                <li className="nav-item">
-                  <span className="badge bg-secondary ms-2 text-uppercase">
-                    {getInitials(currentUser?.name)}
-                  </span>
+                  <ul className="dropdown-menu dropdown-menu-end mt-2" aria-labelledby="userDropdown">
+                    <li>
+                      <span className="dropdown-item-text text-muted">
+                        Rola: <strong>{currentUser?.role}</strong>
+                      </span>
+                    </li>
+                    <li><hr className="dropdown-divider" /></li>
+                    {currentUser?.role === 'admin' && (
+                      <li>
+                        <Link className="dropdown-item" to="/admin">
+                          <FontAwesomeIcon icon={faUserShield} className="me-2" />
+                          Panel Admina
+                        </Link>
+                      </li>
+                    )}
+                    <li>
+                      <button className="dropdown-item text-danger" onClick={handleLogout}>
+                        <FontAwesomeIcon icon={faSignOutAlt} className="me-2" />
+                        Wyloguj
+                      </button>
+                    </li>
+                  </ul>
                 </li>
               </>
             ) : (

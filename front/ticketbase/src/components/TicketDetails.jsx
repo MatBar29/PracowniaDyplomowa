@@ -9,6 +9,7 @@ const TicketDetails = () => {
   const navigate = useNavigate();
 
   const [ticket, setTicket] = useState(null);
+  const [attachments, setAttachments] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [newComment, setNewComment] = useState('');
@@ -26,8 +27,18 @@ const TicketDetails = () => {
     }
   };
 
+  const fetchAttachments = async () => {
+    try {
+      const response = await api.get(`/${id}/attachments`, { withCredentials: true });
+      setAttachments(response.data);
+    } catch (err) {
+      console.error('Błąd przy pobieraniu załączników:', err);
+    }
+  };
+
   useEffect(() => {
     fetchTicketDetails();
+    fetchAttachments();
   }, [id]);
 
   const handleAddComment = async (e) => {
@@ -92,13 +103,52 @@ const TicketDetails = () => {
               {ticket.assigned_to ? ticket.assigned_to.name : 'Nieprzypisane'}
             </div>
           </div>
-          <div className="row">
+          <div className="row mb-3">
             <div className="col-md-6">
               <strong>Utworzono:</strong> {moment(ticket.created_at).format('LLL')}
             </div>
             <div className="col-md-6">
               <strong>Aktualizacja:</strong> {moment(ticket.updated_at).format('LLL')}
             </div>
+          </div>
+
+          <div className="mt-4">
+            <h5 className="mb-3">Załączniki:</h5>
+            {attachments.length === 0 ? (
+              <p className="text-muted">Brak załączników dla tego ticketa.</p>
+            ) : (
+              <div className="row g-3">
+                {attachments.map(file => {
+                  const isImage = /\.(jpg|jpeg|png)$/i.test(file.filename);
+                  const fileUrl = `http://localhost:8000/attachments/${file.filename}`; // ✅ zmienione na statyczny path
+
+                  return (
+                    <div key={file.id} className="col-6 col-md-4 col-lg-3">
+                      <div className="border rounded p-2 text-center bg-white shadow-sm h-100 d-flex flex-column justify-content-between">
+                        {isImage ? (
+                          <a href={fileUrl} target="_blank" rel="noopener noreferrer">
+                            <img
+                              src={fileUrl}
+                              alt={file.filename}
+                              className="img-fluid rounded mb-2"
+                              style={{ maxHeight: '150px', objectFit: 'cover' }}
+                            />
+                          </a>
+                        ) : (
+                          <>
+                            <p className="mb-2 small text-truncate">{file.filename}</p>
+                            <a href={fileUrl} target="_blank" rel="noopener noreferrer" className="btn btn-sm btn-outline-primary">
+                              Pobierz
+                            </a>
+                          </>
+                        )}
+                        <small className="text-muted d-block text-truncate">{file.filename}</small>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
       </div>

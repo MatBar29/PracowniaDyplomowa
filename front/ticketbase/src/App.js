@@ -11,6 +11,7 @@ import TicketEdit from './components/TicketEdit';
 import './App.css';
 import TicketDetails from './components/TicketDetails';
 import AdminPanel from './components/AdminPanel';
+import Footer from './components/Footer';
 
 
 function App() {
@@ -70,6 +71,7 @@ function App() {
           }
         />
       </Routes>
+      <Footer />
     </Router>
   );
 }
