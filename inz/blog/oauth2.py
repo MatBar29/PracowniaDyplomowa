@@ -41,3 +41,14 @@ def is_admin(
             detail="Niedozwolony dostęp"
         )
     return user
+
+def is_service(
+    user: User = Depends(get_current_user)
+):
+    # Sprawdzanie, czy użytkownik ma rolę service
+    if user.role not in (RoleEnum.admin, RoleEnum.service):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Niedozwolony dostęp"
+        )
+    return user

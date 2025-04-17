@@ -83,6 +83,8 @@ def add_worked_hours(id: int, hours: float, db: Session):
     ticket = db.query(models.Ticket).filter(models.Ticket.id == id).first()
     if not ticket:
         raise HTTPException(status_code=404, detail="Ticket not found")
+    if ticket.worked_hours is None:
+        ticket.worked_hours = 0
     ticket.worked_hours += hours
     db.commit()
     db.refresh(ticket)
