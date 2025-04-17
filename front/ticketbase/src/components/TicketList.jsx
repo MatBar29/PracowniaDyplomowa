@@ -21,7 +21,7 @@ const TicketList = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
-
+  const [userMap, setUserMap] = useState({});
   const [statusFilter, setStatusFilter] = useState('all');
   const [assignedFilter, setAssignedFilter] = useState('all');
   const [currentPage, setCurrentPage] = useState(1);
@@ -47,23 +47,34 @@ const TicketList = () => {
           setError('Błąd podczas pobierania ticketów');
           setLoading(false);
         }
-      };      
-
-      const fetchUserStatus = async () => {
+      };
+  
+      const fetchUserStatusAndUsers = async () => {
         try {
-          const response = await api.get('/user/status/', { withCredentials: true });
-          setUserRole(response.data.role);
+          const [statusRes, usersRes] = await Promise.all([
+            api.get('/user/status/', { withCredentials: true }),
+            api.get('/user/') // 🔁 możesz też użyć '/user/service/' jeśli chcesz tylko "service"
+          ]);
+      
+          setUserRole(statusRes.data.role);
+      
+          const map = {};
+          usersRes.data.forEach(user => {
+            map[user.id] = user;
+          });
+          setUserMap(map);
         } catch (error) {
           console.error('Błąd przy pobieraniu danych użytkownika:', error);
         }
       };
-
+      
+  
       fetchTickets();
-      fetchUserStatus();
+      fetchUserStatusAndUsers();
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated]);  
 
   const handleDelete = async (ticketId) => {
     const confirmed = window.confirm('Czy na pewno chcesz usunąć ten ticket?');
@@ -82,8 +93,8 @@ const TicketList = () => {
     const matchStatus = statusFilter === 'all' || ticket.status === statusFilter;
     const matchAssigned =
       assignedFilter === 'all' ||
-      (assignedFilter === 'assigned' && ticket.assigned_to) ||
-      (assignedFilter === 'unassigned' && !ticket.assigned_to);
+      (assignedFilter === 'assigned' && ticket.assigned_to_id) ||
+      (assignedFilter === 'unassigned' && !ticket.assigned_to_id)
     return matchStatus && matchAssigned;
   });
 
@@ -164,7 +175,9 @@ const TicketList = () => {
                   </p>
                   <p className="mb-1">
                     <strong>Przypisane do:</strong>{' '}
-                    {ticket.assigned_to ? ticket.assigned_to.name : 'Nieprzypisane'}
+                    {ticket.assigned_to_id
+                      ? userMap[ticket.assigned_to_id]?.name || 'Nieznany użytkownik'
+                      : 'Nieprzypisane'}
                   </p>
                 </div>
                 <div className="d-flex flex-wrap gap-2 mt-3 mt-md-0">

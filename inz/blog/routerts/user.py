@@ -25,7 +25,7 @@ async def check_status(current_user: models.User = Depends(get_current_user)):
 def show(id: int, db: Session = Depends(get_db)):
     return user.show(id, db)
 
-@router.get('/', response_model=List[schemas.ShowUser])
+@router.get('/', response_model=List[schemas.ShowUserT])
 def get_all_users(db: Session = Depends(get_db)):
     return db.query(models.User).all()
 
@@ -33,7 +33,7 @@ def get_all_users(db: Session = Depends(get_db)):
 def update(email: str, request: schemas.UserUpdate , db: Session = Depends(get_db), usera=Depends(is_admin)):
     return user.update(email, request, db)
 
-@router.get('/service/', response_model=List[schemas.ShowUser])
+@router.get('/service/', response_model=List[schemas.ShowUserT])
 def get_service_and_admin_users(db: Session = Depends(get_db)):
     return db.query(models.User).filter(
         or_(

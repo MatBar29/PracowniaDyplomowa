@@ -111,6 +111,30 @@ const TicketDetails = () => {
               <strong>Aktualizacja:</strong> {moment(ticket.updated_at).format('LLL')}
             </div>
           </div>
+            {ticket.estimated_hours ? (
+            <div className="mb-4">
+              <h5 className="mb-2">Progres pracy:</h5>
+              <div className="progress" style={{ height: '25px' }}>
+                <div
+                  className="progress-bar"
+                  role="progressbar"
+                  style={{
+                    width: `${Math.min(100, (ticket.worked_hours / ticket.estimated_hours) * 100)}%`
+                  }}
+                  aria-valuenow={ticket.worked_hours}
+                  aria-valuemin="0"
+                  aria-valuemax={ticket.estimated_hours}
+                >
+                  {ticket.worked_hours}h / {ticket.estimated_hours}h
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="mb-4">
+              <h5 className="mb-2">Progres pracy:</h5>
+              <p className="text-muted">Brak przewidywanego czasu pracy.</p>
+            </div>
+          )}
 
           <div className="mt-4">
             <h5 className="mb-3">Załączniki:</h5>

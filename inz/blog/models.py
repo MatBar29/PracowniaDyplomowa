@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, Enum
+from sqlalchemy import Column, DateTime, Integer, String, ForeignKey, Enum, Float
 from .database import Base
 from sqlalchemy.orm import relationship
 from .enum_models import StatusEnum, PriorityEnum, RoleEnum
@@ -7,7 +7,7 @@ from .enum_models import StatusEnum, PriorityEnum, RoleEnum
 
 class Ticket(Base):
     __tablename__ = 'tickets'
-    
+
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String)
     description = Column(String)
@@ -15,19 +15,15 @@ class Ticket(Base):
     priority = Column(Enum(PriorityEnum), nullable=True)
     created_at = Column(DateTime, default=datetime.datetime.now())
     updated_at = Column(DateTime, default=datetime.datetime.now())
+    estimated_hours = Column(Float, nullable=True)
+    worked_hours = Column(Float, default=0.0)
 
     user_id = Column(Integer, ForeignKey('users.id'))
     creator = relationship("User", foreign_keys=[user_id], back_populates="tickets_created")
-
     assigned_to_id = Column(Integer, ForeignKey('users.id'), nullable=True)
     assigned_to = relationship("User", foreign_keys=[assigned_to_id], back_populates="tickets_assigned")
-
     comments = relationship('Comment', back_populates="ticket", cascade="all, delete-orphan")
-
     attachments = relationship('Attachment', back_populates="ticket", cascade="all, delete-orphan")
-
-
-
 
 class User(Base):
     __tablename__ = 'users'

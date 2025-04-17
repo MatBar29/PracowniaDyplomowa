@@ -1,9 +1,8 @@
+import datetime
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status
-
 from blog.enum_models import RoleEnum
 from .. import models, schemas
-
 from sqlalchemy import or_
 
 def get_all(db: Session, current_user: schemas.User):
@@ -46,17 +45,19 @@ def delete(id: int, db: Session):
 
 def update(id: int, request: schemas.TicketUpdate, db: Session):
     ticket_query = db.query(models.Ticket).filter(models.Ticket.id == id)
-
     if not ticket_query.first():
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Ticket with id {id} not found')
 
-    # Użycie only those fields that should be updated
-    ticket_query.update({
+    update_data = {
         'status': request.status,
         'priority': request.priority,
-        'assigned_to_id': request.assigned_to  # Użyj assigned_to_id
-    }, synchronize_session='fetch')
+        'assigned_to_id': request.assigned_to,
+        'estimated_hours': request.estimated_hours,
+        'worked_hours': request.worked_hours,
+        'updated_at': datetime.datetime.now()
+    }
 
+    ticket_query.update(update_data, synchronize_session='fetch')
     db.commit()
     return 'updated'
 
@@ -66,4 +67,23 @@ def show(id: int, db: Session):
     ticket = db.query(models.Ticket).filter(models.Ticket.id == id).first()
     if not ticket:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f'Ticket with the id {id} is not available')
+    return ticket
+
+def set_estimated_hours(id: int, hours: float, db: Session):
+    ticket = db.query(models.Ticket).filter(models.Ticket.id == id).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    ticket.estimated_hours = hours
+    db.commit()
+    db.refresh(ticket)
+    return ticket
+
+
+def add_worked_hours(id: int, hours: float, db: Session):
+    ticket = db.query(models.Ticket).filter(models.Ticket.id == id).first()
+    if not ticket:
+        raise HTTPException(status_code=404, detail="Ticket not found")
+    ticket.worked_hours += hours
+    db.commit()
+    db.refresh(ticket)
     return ticket

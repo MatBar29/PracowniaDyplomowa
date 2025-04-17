@@ -13,7 +13,9 @@ const TicketEdit = () => {
   const [formData, setFormData] = useState({
     status: '',
     priority: '',
-    assigned_to: ''
+    assigned_to: '',
+    estimated_hours: '',
+    worked_hours: ''
   });
   const [error, setError] = useState(null);
   const [userRole, setUserRole] = useState(null);
@@ -26,7 +28,9 @@ const TicketEdit = () => {
         setFormData({
           status: response.data.status || '',
           priority: response.data.priority || '',
-          assigned_to: response.data.assigned_to?.id || ''
+          assigned_to: response.data.assigned_to?.id || '',
+          estimated_hours: response.data.estimated_hours || '',
+          worked_hours: response.data.worked_hours || ''
         });
       } catch (err) {
         setError('Nie udało się pobrać ticketa.');
@@ -63,17 +67,34 @@ const TicketEdit = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
+  
     try {
-      await api.put(`/ticket/${id}`, {
+      const payload = {
         status: formData.status || null,
         priority: formData.priority || null,
-        assigned_to: formData.assigned_to || null
-      });
+        assigned_to: formData.assigned_to !== '' ? parseInt(formData.assigned_to, 10) : null
+      };
+        
+      await api.put(`/ticket/${id}`, payload);
+  
+      if (userRole === 'admin' && formData.estimated_hours !== '') {
+        await api.put(`/ticket/${id}/estimate`, {
+          estimated_hours: parseFloat(formData.estimated_hours)
+        });
+      }
+  
+      if (userRole === 'service' && formData.worked_hours !== '') {
+        await api.put(`/ticket/${id}/log-time`, {
+          worked_hours: parseFloat(formData.worked_hours)
+        });
+      }
+  
       navigate('/ticket-list');
     } catch (err) {
+      console.error('Błąd przy aktualizacji:', err);
       setError('Błąd przy aktualizacji ticketa.');
     }
-  };
+  };  
 
   if (!ticket) return <div className="text-center mt-5">Ładowanie danych ticketa...</div>;
 
@@ -134,6 +155,34 @@ const TicketEdit = () => {
                   ))}
                 </select>
               </div>
+
+              {userRole === 'admin' && (
+                <div>
+                  <label className="form-label fw-bold">Przewidywany czas (h)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    className="form-control"
+                    name="estimated_hours"
+                    value={formData.estimated_hours}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
+
+              {userRole === 'service' && (
+                <div>
+                  <label className="form-label fw-bold">Wykonany czas (h)</label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    className="form-control"
+                    name="worked_hours"
+                    value={formData.worked_hours}
+                    onChange={handleChange}
+                  />
+                </div>
+              )}
 
               <div className="d-flex justify-content-between mt-4">
                 <button className="btn btn-primary" type="submit">

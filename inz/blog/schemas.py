@@ -7,8 +7,10 @@ from .enum_schemas import StatusEnum, PriorityEnum, RoleEnum
 class Ticket(BaseModel):
     title: str
     description: str
-    created_at: Optional[datetime.datetime] = datetime.datetime.now
-    updated_at: Optional[datetime.datetime] = datetime.datetime.now
+    created_at: Optional[datetime.datetime] = None
+    updated_at: Optional[datetime.datetime] = None
+    estimated_hours: Optional[float] = None
+    worked_hours: Optional[float] = 0.0
 
     class Config:
         orm_mode = True
@@ -17,7 +19,9 @@ class TicketUpdate(BaseModel):
     status: Optional[StatusEnum] = None
     priority: Optional[PriorityEnum] = None
     assigned_to: Optional[int] = None
-    updated_at: Optional[datetime.datetime] = datetime.datetime.now
+    estimated_hours: Optional[float] = None
+    worked_hours: Optional[float] = None
+    updated_at: Optional[datetime.datetime] = None
 
 class User(BaseModel):
     name: str
@@ -64,6 +68,8 @@ class ShowTicket(BaseModel):
     created_at: datetime.datetime
     updated_at: datetime.datetime
     comments: List[ShowCommentT]
+    estimated_hours: Optional[float] = None
+    worked_hours: Optional[float] = None
 
     class Config:
         orm_mode = True
@@ -117,3 +123,9 @@ class CreateAttachment(BaseModel):
 class ShowAttachment(AttachmentBase):
     id: int
     uploaded_at: datetime.datetime
+
+class EstimateHours(BaseModel):
+    estimated_hours: float
+
+class AddWorkedHours(BaseModel):
+    worked_hours: float
