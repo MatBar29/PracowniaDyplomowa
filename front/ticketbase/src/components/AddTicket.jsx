@@ -5,46 +5,54 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperclip, faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const AddTicket = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook do nawigacji między stronami
 
+  // Stan formularza dla tytułu i opisu zgłoszenia
   const [formData, setFormData] = useState({
     title: "",
     description: "",
   });
+
+  // Stan dla załączonych plików
   const [files, setFiles] = useState([]);
+
+  // Stan dla błędów
   const [error, setError] = useState(null);
 
+  // Obsługa zmiany wartości w polach formularza
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value })); // Aktualizacja stanu formularza
   };
 
+  // Obsługa zmiany załączonych plików
   const handleFileChange = (e) => {
-    setFiles(e.target.files);
+    setFiles(e.target.files); // Przechowywanie wybranych plików
   };
 
+  // Obsługa wysyłania formularza
   const handleSubmit = async (e) => {
-    e.preventDefault();
+    e.preventDefault(); // Zapobiega przeładowaniu strony
     try {
-      // 1. Utwórz ticket
+      // 1. Utwórz zgłoszenie w API
       const response = await api.post("/ticket/", formData, { withCredentials: true });
-      const ticketId = response.data.id;
+      const ticketId = response.data.id; // Pobranie ID nowo utworzonego zgłoszenia
 
-      // 2. Dodaj załączniki jeśli są
+      // 2. Dodaj załączniki, jeśli zostały wybrane
       if (files.length > 0) {
         for (const file of files) {
-          const formData = new FormData();
-          formData.append("file", file);
+          const formData = new FormData(); // Tworzenie obiektu FormData dla każdego pliku
+          formData.append("file", file); // Dodanie pliku do FormData
           await api.post(`/${ticketId}/attachments`, formData, {
             withCredentials: true,
-            headers: { "Content-Type": "multipart/form-data" }
+            headers: { "Content-Type": "multipart/form-data" } // Ustawienie nagłówka dla przesyłania plików
           });
         }
       }
 
-      navigate("/ticket-list"); // przekierowanie po dodaniu
+      navigate("/ticket-list"); // Przekierowanie na listę zgłoszeń po sukcesie
     } catch (err) {
-      setError("Nie udało się utworzyć zgłoszenia. Spróbuj ponownie.");
+      setError("Nie udało się utworzyć zgłoszenia. Spróbuj ponownie."); // Ustawienie błędu w przypadku niepowodzenia
     }
   };
 
@@ -53,6 +61,7 @@ const AddTicket = () => {
       <div className="card shadow-lg p-4" style={{ maxWidth: "600px", width: "100%" }}>
         <h3 className="text-center mb-4">Nowe Zgłoszenie</h3>
 
+        {/* Wyświetlenie błędu, jeśli wystąpił */}
         {error && <div className="alert alert-danger">{error}</div>}
 
         <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
@@ -65,7 +74,7 @@ const AddTicket = () => {
               className="form-control"
               placeholder="Wprowadź tytuł"
               value={formData.title}
-              onChange={handleChange}
+              onChange={handleChange} // Obsługa zmiany wartości
               required
             />
           </div>
@@ -79,7 +88,7 @@ const AddTicket = () => {
               className="form-control"
               placeholder="Opisz swój problem"
               value={formData.description}
-              onChange={handleChange}
+              onChange={handleChange} // Obsługa zmiany wartości
               required
             />
           </div>
@@ -93,9 +102,9 @@ const AddTicket = () => {
               id="attachments"
               type="file"
               multiple
-              accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+              accept=".jpg,.jpeg,.png,image/jpeg,image/png" // Akceptowane typy plików
               className="form-control"
-              onChange={handleFileChange}
+              onChange={handleFileChange} // Obsługa zmiany załączników
             />
           </div>
 

@@ -10,7 +10,7 @@ const Footer = () => {
         <div className="text-end small">
           <div><strong>Kontakt:</strong> support@ticketbase.pl</div>
           <div><strong>Telefon:</strong> +48 123 456 789</div>
-          <div><strong>Adres:</strong> ul. Serwisowa 15, 00-001 Warszawa</div>
+          <div><strong>Adres:</strong> ul. Serwisowa 15, 00-001 Olsztyn</div>
         </div>
       </div>
     </footer>
