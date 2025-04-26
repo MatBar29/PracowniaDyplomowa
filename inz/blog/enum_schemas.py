@@ -17,4 +17,3 @@ class RoleEnum(str, Enum):
     admin = 'admin'
     user = 'user'
     service = 'service'
-    menager = 'menager'

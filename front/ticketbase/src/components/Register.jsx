@@ -22,14 +22,28 @@ const Register = () => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+  
+    const password = formData.password;
+    
+    // Sprawdzenie: min. 8 znaków i przynajmniej jedna cyfra
+    const hasMinimumLength = password.length >= 8;
+    const hasNumber = /\d/.test(password);
+  
+    if (!hasMinimumLength || !hasNumber) {
+      setError("Hasło musi mieć co najmniej 8 znaków i zawierać przynajmniej jedną cyfrę.");
+      return;
+    }
+  
     try {
       await api.post("/user/", formData);
       setSuccess("Rejestracja zakończona sukcesem! Przekierowanie do logowania...");
+      setError(""); // wyczyść ewentualny wcześniejszy błąd
       setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
       setError("Wystąpił błąd podczas rejestracji");
+      setSuccess(""); // wyczyść ewentualny wcześniejszy sukces
     }
-  };
+  };  
 
   return (
     <div className="container d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>

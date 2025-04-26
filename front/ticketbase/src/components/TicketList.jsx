@@ -53,7 +53,7 @@ const TicketList = () => {
         try {
           const [statusRes, usersRes] = await Promise.all([
             api.get('/user/status/', { withCredentials: true }),
-            api.get('/user/') // 🔁 możesz też użyć '/user/service/' jeśli chcesz tylko "service"
+            api.get('/user/')
           ]);
       
           setUserRole(statusRes.data.role);
@@ -102,6 +102,20 @@ const TicketList = () => {
   const indexOfFirst = indexOfLast - ticketsPerPage;
   const currentTickets = filteredTickets.slice(indexOfFirst, indexOfLast);
   const totalPages = Math.ceil(filteredTickets.length / ticketsPerPage);
+
+  const translatePriority = (priority) => {
+    switch (priority) {
+      case 'low':
+        return 'niski';
+      case 'medium':
+        return 'średni';
+      case 'high':
+        return 'wysoki';
+      default:
+        return 'nie znany';
+    }
+  };
+  
 
   if (loading) return <div>Ładowanie...</div>;
   if (error) return <div>{error}</div>;
@@ -171,7 +185,7 @@ const TicketList = () => {
                   </p>
                   <p className="mb-1">
                     <strong>Priorytet:</strong>{' '}
-                    <span className="badge bg-warning text-dark">{ticket.priority}</span>
+                    <span className="badge bg-warning text-dark">{translatePriority(ticket.priority)}</span>
                   </p>
                   <p className="mb-1">
                     <strong>Przypisane do:</strong>{' '}

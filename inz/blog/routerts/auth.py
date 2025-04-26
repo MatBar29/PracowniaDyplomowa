@@ -13,11 +13,11 @@ def login(response: Response, request: OAuth2PasswordRequestForm = Depends(), db
     # Sprawdzenie, czy użytkownik istnieje
     user = db.query(models.User).filter(models.User.email == request.username).first()
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Invalid credentials')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Niepoprawne dane')
     
     # Sprawdzenie poprawności hasła
     if not Hash.verify(user.password, request.password):
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Invalid credentials')
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Niepoprawne dane')
 
     # Utworzenie tokenu i zapisanie go w ciasteczku
     access_token = token.create_access_token(response=response, data={"sub": user.email, "id": user.id})

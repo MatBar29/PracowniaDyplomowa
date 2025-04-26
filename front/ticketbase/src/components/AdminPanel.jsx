@@ -49,6 +49,20 @@ const AdminPanel = () => {
     user.email.toLowerCase().includes(emailSearch.toLowerCase())
   );
 
+  const translateRole = (role) => {
+    switch (role) {
+      case 'admin':
+        return 'Administrator';
+      case 'service':
+        return 'Serwisant';
+      case 'user':
+        return 'Użytkownik';
+      default:
+        return 'Nieznana rola';
+    }
+  };
+  
+
   if (loading) return <div className="text-center mt-5">Ladowanie danych...</div>;
   if (error) return <div className="alert alert-danger mt-4 text-center">{error}</div>;
 
@@ -58,11 +72,10 @@ const AdminPanel = () => {
 
       {userRole === 'admin' ? (
         <div className="row">
-          {/* Left panel: current admins and service users */}
           <div className="col-md-4">
             <div className="card shadow-sm">
               <div className="card-body">
-                <h5 className="card-title">Użytkownicy z rolą admin/service</h5>
+                <h5 className="card-title">Użytkownicy z rolą administrator/serwisant</h5>
                 <ul className="list-group">
                   {serviceAndAdminUsers.map(user => (
                     <li key={user.id} className="list-group-item">
@@ -76,10 +89,9 @@ const AdminPanel = () => {
                           value={user.role}
                           onChange={(e) => handleRoleChange(user.email, e.target.value)}
                         >
-                          <option value="user">user</option>
-                          <option value="service">service</option>
-                          <option value="menager">menager</option>
-                          <option value="admin">admin</option>
+                          <option value="user">użytokwnik</option>
+                          <option value="service">serwisant</option>
+                          <option value="admin">administrator</option>
                         </select>
                       </div>
                     </li>
@@ -89,7 +101,6 @@ const AdminPanel = () => {
             </div>
           </div>
 
-          {/* Right panel: assign role */}
           <div className="col-md-8">
             <div className="card shadow-sm">
               <div className="card-body">
@@ -116,7 +127,7 @@ const AdminPanel = () => {
                           <h6 className="mb-1">{user.name}</h6>
                           <p className="mb-0 text-muted small">{user.email}</p>
                         </div>
-                        <span className="badge bg-secondary text-uppercase">{user.role}</span>
+                        <span className="badge bg-secondary text-uppercase">{translateRole(user.role)}</span>
                       </div>
                     </div>
                   ))}
@@ -130,10 +141,9 @@ const AdminPanel = () => {
                       value={selectedUser.role}
                       onChange={(e) => handleRoleChange(selectedUser.email, e.target.value)}
                     >
-                      <option value="user">user</option>
-                      <option value="service">service</option>
-                      <option value="menager">menager</option>
-                      <option value="admin">admin</option>
+                      <option value="user">użytkownik</option>
+                      <option value="service">serwisant</option>
+                      <option value="admin">administrator</option>
                     </select>
                   </div>
                 )}

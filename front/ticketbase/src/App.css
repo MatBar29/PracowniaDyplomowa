@@ -6,8 +6,6 @@ body {
   padding: 0; /* Usunięcie paddingu domyślnego */
 }
 
-
-
 /* Stylizacja navbaru */
 .navbar-dark {
   background-color: #333 !important; /* Ciemne tło dla navbaru */

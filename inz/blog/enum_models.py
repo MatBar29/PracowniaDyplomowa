@@ -16,4 +16,3 @@ class RoleEnum(enum.Enum):
     admin = 'admin'
     user = 'user'
     service = 'service'
-    menager = 'menager'

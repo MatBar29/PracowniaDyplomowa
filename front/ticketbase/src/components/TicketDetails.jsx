@@ -111,6 +111,35 @@ const TicketDetails = () => {
       .join('');
   };
 
+  const translateStatus = (status) => {
+    switch (status) {
+      case 'new':
+        return 'Nowy';
+      case 'in_progress':
+        return 'W trakcie';
+      case 'resolved':
+        return 'Rozwiązany';
+      case 'closed':
+        return 'Zamknięty';
+      default:
+        return status;
+    }
+  };
+  
+  const translatePriority = (priority) => {
+    switch (priority) {
+      case 'low':
+        return 'Niski';
+      case 'medium':
+        return 'Średni';
+      case 'high':
+        return 'Wysoki';
+      default:
+        return priority;
+    }
+  };
+  
+
   if (loading) return <div>Ładowanie szczegółów...</div>;
   if (error) return <div>{error}</div>;
   if (!ticket) return <div>Ticket nie znaleziony</div>;
@@ -131,11 +160,11 @@ const TicketDetails = () => {
           <div className="row mb-2 align-items-center">
             <div className="col-md-4">
               <strong>Status:</strong>{' '}
-              <span className="badge bg-info text-dark">{ticket.status}</span>
+              <span className="badge bg-info text-dark">{translateStatus(ticket.status)}</span>
             </div>
             <div className="col-md-4">
               <strong>Priorytet:</strong>{' '}
-              <span className="badge bg-warning text-dark">{ticket.priority}</span>
+              <span className="badge bg-warning text-dark">{translatePriority(ticket.priority)}</span>
             </div>
             <div className="col-md-4">
               <strong>Przypisany do:</strong>{' '}
