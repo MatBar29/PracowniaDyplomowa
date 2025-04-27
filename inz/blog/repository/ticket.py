@@ -6,7 +6,7 @@ from .. import models, schemas
 from sqlalchemy import or_
 
 def get_all(db: Session, current_user: schemas.User):
-    if current_user.role == RoleEnum.admin or current_user.role == RoleEnum.menager:
+    if current_user.role == RoleEnum.admin:
         # Admin/Manager widzi wszystkie tickety
         return db.query(models.Ticket).all()
     elif current_user.role == RoleEnum.service:
