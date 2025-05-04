@@ -4,27 +4,30 @@ import api from '../api';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSave, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
+// Komponent do edycji zgłoszenia
 const TicketEdit = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams(); // Pobranie ID zgłoszenia z parametrów URL
+  const navigate = useNavigate(); // Hook do nawigacji między stronami
 
-  const [ticket, setTicket] = useState(null);
-  const [users, setUsers] = useState([]);
+  // Stany komponentu
+  const [ticket, setTicket] = useState(null); // Szczegóły zgłoszenia
+  const [users, setUsers] = useState([]); // Lista użytkowników
   const [formData, setFormData] = useState({
-    status: '',
-    priority: '',
-    assigned_to: '',
-    estimated_hours: '',
-    worked_hours: ''
+    status: '', // Status zgłoszenia
+    priority: '', // Priorytet zgłoszenia
+    assigned_to: '', // Przypisany użytkownik
+    estimated_hours: '', // Przewidywany czas realizacji
+    worked_hours: '' // Wykonany czas pracy
   });
-  const [error, setError] = useState(null);
-  const [userRole, setUserRole] = useState(null);
+  const [error, setError] = useState(null); // Komunikat o błędzie
+  const [userRole, setUserRole] = useState(null); // Rola aktualnie zalogowanego użytkownika
 
+  // Pobranie danych zgłoszenia, użytkowników i statusu użytkownika po załadowaniu komponentu
   useEffect(() => {
     const fetchTicket = async () => {
       try {
-        const response = await api.get(`/ticket/${id}`);
-        setTicket(response.data);
+        const response = await api.get(`/ticket/${id}`); // Pobranie szczegółów zgłoszenia z API
+        setTicket(response.data); // Ustawienie szczegółów zgłoszenia
         setFormData({
           status: response.data.status || '',
           priority: response.data.priority || '',
@@ -39,7 +42,7 @@ const TicketEdit = () => {
 
     const fetchUsers = async () => {
       try {
-        const res = await api.get('/user/service/');
+        const res = await api.get('/user/service/'); // Pobranie listy użytkowników z rolą "service"
         setUsers(res.data);
       } catch (err) {
         console.error('Błąd przy pobieraniu użytkowników:', err);
@@ -48,7 +51,7 @@ const TicketEdit = () => {
 
     const fetchUserStatus = async () => {
       try {
-        const response = await api.get('/user/status/', { withCredentials: true });
+        const response = await api.get('/user/status/', { withCredentials: true }); // Pobranie statusu zalogowanego użytkownika
         setUserRole(response.data.role);
       } catch (error) {
         console.error('Błąd przy pobieraniu danych użytkownika:', error);
@@ -60,42 +63,47 @@ const TicketEdit = () => {
     fetchUserStatus();
   }, [id]);
 
+  // Obsługa zmiany wartości w polach formularza
   const handleChange = e => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value })); // Aktualizacja stanu formularza
   };
 
+  // Obsługa wysyłania formularza edycji zgłoszenia
   const handleSubmit = async e => {
-    e.preventDefault();
+    e.preventDefault(); // Zapobiega przeładowaniu strony
   
     try {
       const payload = {
-        status: formData.status || null,
-        priority: formData.priority || null,
-        assigned_to: formData.assigned_to !== '' ? parseInt(formData.assigned_to, 10) : null
+        status: formData.status || null, // Status zgłoszenia
+        priority: formData.priority || null, // Priorytet zgłoszenia
+        assigned_to: formData.assigned_to !== '' ? parseInt(formData.assigned_to, 10) : null // Przypisany użytkownik
       };
         
-      await api.put(`/ticket/${id}`, payload);
+      await api.put(`/ticket/${id}`, payload); // Aktualizacja zgłoszenia w API
   
+      // Dodatkowe operacje dla administratora
       if (userRole === 'admin' && formData.estimated_hours !== '') {
         await api.put(`/ticket/${id}/estimate`, {
-          estimated_hours: parseFloat(formData.estimated_hours)
+          estimated_hours: parseFloat(formData.estimated_hours) // Aktualizacja przewidywanego czasu realizacji
         });
       }
   
+      // Dodatkowe operacje dla serwisanta
       if (userRole === 'service' && formData.worked_hours !== '') {
         await api.put(`/ticket/${id}/log-time`, {
-          worked_hours: parseFloat(formData.worked_hours)
+          worked_hours: parseFloat(formData.worked_hours) // Aktualizacja przepracowanego czasu
         });
       }
   
-      navigate('/ticket-list');
+      navigate('/ticket-list'); // Przekierowanie na listę zgłoszeń po sukcesie
     } catch (err) {
       console.error('Błąd przy aktualizacji:', err);
-      setError('Błąd przy aktualizacji ticketa.');
+      setError('Błąd przy aktualizacji ticketa.'); // Ustawienie komunikatu o błędzie
     }
   };  
 
+  // Wyświetlenie komunikatu podczas ładowania danych zgłoszenia
   if (!ticket) return <div className="text-center mt-5">Ładowanie danych ticketa...</div>;
 
   return (
@@ -104,8 +112,10 @@ const TicketEdit = () => {
         <div className="card-body">
           <h3 className="card-title text-center mb-4">Edytuj Ticket</h3>
 
+          {/* Wyświetlenie komunikatu o błędzie */}
           {error && <div className="alert alert-danger">{error}</div>}
 
+          {/* Formularz edycji zgłoszenia */}
           {userRole === 'admin' || userRole === 'service' ? (
             <form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
               <div>
@@ -156,6 +166,7 @@ const TicketEdit = () => {
                 </select>
               </div>
 
+              {/* Pole dla administratora do ustawienia przewidywanego czasu */}
               {userRole === 'admin' && (
                 <div>
                   <label className="form-label fw-bold">Przewidywany czas (h)</label>
@@ -170,6 +181,7 @@ const TicketEdit = () => {
                 </div>
               )}
 
+              {/* Pole dla serwisanta do ustawienia przepracowanego czasu */}
               {userRole === 'service' && (
                 <div>
                   <label className="form-label fw-bold">Wykonany czas (h)</label>
@@ -184,6 +196,7 @@ const TicketEdit = () => {
                 </div>
               )}
 
+              {/* Przyciski do zapisania zmian i powrotu do listy */}
               <div className="d-flex justify-content-between mt-4">
                 <button className="btn btn-primary" type="submit">
                   <FontAwesomeIcon icon={faSave} className="me-2" />
@@ -200,6 +213,7 @@ const TicketEdit = () => {
               </div>
             </form>
           ) : (
+            // Komunikat o braku uprawnień
             <div className="alert alert-danger mt-3">Brak uprawnień do edycji tego ticketu.</div>
           )}
         </div>
@@ -208,4 +222,4 @@ const TicketEdit = () => {
   );
 };
 
-export default TicketEdit;
+export default TicketEdit; // Eksport komponentu edycji zgłoszenia

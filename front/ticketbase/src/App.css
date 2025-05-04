@@ -22,39 +22,39 @@ body {
 }
 
 .navbar-nav .btn:hover {
-  background-color: #ffffff !important; /* Kolor tła przycisku */
-  color: #333 !important;
+  background-color: #ffffff !important; /* Kolor tła przycisku po najechaniu */
+  color: #333 !important; /* Ciemny tekst po najechaniu */
 }
 
 /* Przyciski */
 .btn-outline-info {
-  color: #ffffff !important;
-  border-color: #17a2b8 !important;
+  color: #ffffff !important; /* Biały tekst */
+  border-color: #17a2b8 !important; /* Kolor ramki */
 }
 
 .btn-outline-info:hover {
-  background-color: #17a2b8 !important;
-  color: white !important;
+  background-color: #17a2b8 !important; /* Kolor tła po najechaniu */
+  color: white !important; /* Biały tekst po najechaniu */
 }
 
 .btn-outline-success {
-  color: #ffffff !important;
-  border-color: #28a745 !important;
+  color: #ffffff !important; /* Biały tekst */
+  border-color: #28a745 !important; /* Kolor ramki */
 }
 
 .btn-outline-success:hover {
-  background-color: #28a745 !important;
-  color: white !important;
+  background-color: #28a745 !important; /* Kolor tła po najechaniu */
+  color: white !important; /* Biały tekst po najechaniu */
 }
 
 .btn-outline-danger {
-  color: #ffffff !important;
-  border-color: #dc3545 !important;
+  color: #ffffff !important; /* Biały tekst */
+  border-color: #dc3545 !important; /* Kolor ramki */
 }
 
 .btn-outline-danger:hover {
-  background-color: #dc3545 !important;
-  color: white !important;
+  background-color: #dc3545 !important; /* Kolor tła po najechaniu */
+  color: white !important; /* Biały tekst po najechaniu */
 }
 
 /* Stylizacja kontenera formularza na stronie AddTicket */
@@ -63,24 +63,24 @@ body {
   padding: 30px; /* Padding wokół formularza */
   max-width: 600px; /* Maksymalna szerokość formularza */
   width: 100%; /* Formularz nie będzie szerszy niż 600px */
-  box-sizing: border-box;
+  box-sizing: border-box; /* Uwzględnienie paddingu w szerokości */
   border-radius: 8px; /* Zaokrąglone rogi formularza */
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Delikatny cień */
   margin: 100px auto 0; /* Wyśrodkowanie formularza */
 }
 
 .add-ticket-container h2 {
-  font-size: 1.8rem;
-  font-weight: 600;
-  color: #333;
+  font-size: 1.8rem; /* Rozmiar czcionki tytułu */
+  font-weight: 600; /* Grubość czcionki */
+  color: #333; /* Kolor tekstu */
   margin-bottom: 20px; /* Odstęp między tytułem a formularzem */
-  text-align: center;
+  text-align: center; /* Wyśrodkowanie tekstu */
 }
 
 /* Stylizacja etykiet formularza */
 .add-ticket-container .form-label {
-  font-size: 1rem;
-  color: #555;
+  font-size: 1rem; /* Rozmiar czcionki etykiety */
+  color: #555; /* Kolor tekstu */
   margin-bottom: 10px; /* Odstęp między etykietą a polem */
 }
 
@@ -92,19 +92,19 @@ body {
   border-radius: 6px; /* Zaokrąglone rogi */
   border: 1px solid #ddd; /* Delikatna ramka */
   background-color: #f9f9f9; /* Tło pól */
-  font-size: 1rem;
+  font-size: 1rem; /* Rozmiar czcionki */
 }
 
 /* Przycisk formularza */
 .add-ticket-container .btn {
   width: 100%; /* Pełna szerokość przycisku */
-  padding: 14px;
+  padding: 14px; /* Padding wewnętrzny */
   border-radius: 6px; /* Zaokrąglone rogi przycisku */
   background-color: #007bff; /* Niebieskie tło */
-  color: white;
-  border: none;
-  font-size: 1.2rem;
-  cursor: pointer;
+  color: white; /* Biały tekst */
+  border: none; /* Brak ramki */
+  font-size: 1.2rem; /* Rozmiar czcionki */
+  cursor: pointer; /* Wskaźnik kursora */
 }
 
 .add-ticket-container .btn:hover {
@@ -113,10 +113,10 @@ body {
 
 /* Komunikaty o błędach */
 .add-ticket-container .alert {
-  margin-top: 20px;
-  padding: 10px;
+  margin-top: 20px; /* Odstęp od góry */
+  padding: 10px; /* Padding wewnętrzny */
   background-color: #dc3545; /* Czerwony kolor dla błędów */
-  color: white;
-  border-radius: 4px;
-  text-align: center;
+  color: white; /* Biały tekst */
+  border-radius: 4px; /* Zaokrąglone rogi */
+  text-align: center; /* Wyśrodkowanie tekstu */
 }

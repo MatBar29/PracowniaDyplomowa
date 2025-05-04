@@ -1,27 +1,30 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navbar from './components/Navbar';
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
-import AddTicket from './components/AddTicket';
-import ProtectedRoute from './components/ProtectedRoute';
-import TicketList from './components/TicketList';
-import TicketEdit from './components/TicketEdit';
-import './App.css';
-import TicketDetails from './components/TicketDetails';
-import AdminPanel from './components/AdminPanel';
-import Footer from './components/Footer';
-
+import Navbar from './components/Navbar'; // Komponent nawigacji
+import Home from './components/Home'; // Strona główna
+import Login from './components/Login'; // Strona logowania
+import Register from './components/Register'; // Strona rejestracji
+import AddTicket from './components/AddTicket'; // Formularz dodawania zgłoszenia
+import ProtectedRoute from './components/ProtectedRoute'; // Ochrona tras dla zalogowanych użytkowników
+import TicketList from './components/TicketList'; // Lista zgłoszeń
+import TicketEdit from './components/TicketEdit'; // Edycja zgłoszenia
+import './App.css'; // Stylizacja aplikacji
+import TicketDetails from './components/TicketDetails'; // Szczegóły zgłoszenia
+import AdminPanel from './components/AdminPanel'; // Panel administratora
+import Footer from './components/Footer'; // Stopka aplikacji
 
 function App() {
   return (
     <Router>
+      {/* Komponent nawigacji wyświetlany na każdej stronie */}
       <Navbar />
       <Routes>
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+        {/* Trasa logowania */}
+        <Route path="/login" element={<Login />} />
+        {/* Trasa rejestracji */}
+        <Route path="/register" element={<Register />} />
 
+        {/* Trasa strony głównej chroniona dla zalogowanych użytkowników */}
         <Route
           path="/"
           element={
@@ -30,6 +33,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Trasa dodawania nowego zgłoszenia chroniona dla zalogowanych użytkowników */}
         <Route
           path="/new-ticket"
           element={
@@ -38,6 +42,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Trasa listy zgłoszeń chroniona dla zalogowanych użytkowników */}
         <Route
           path="/ticket-list"
           element={
@@ -46,6 +51,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Trasa edycji zgłoszenia chroniona dla zalogowanych użytkowników */}
         <Route
           path="/tickets/edit/:id"
           element={
@@ -54,6 +60,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Trasa szczegółów zgłoszenia chroniona dla zalogowanych użytkowników */}
         <Route
           path="/tickets/:id"
           element={
@@ -62,6 +69,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        {/* Trasa panelu administratora chroniona dla zalogowanych użytkowników */}
         <Route
           path="/admin"
           element={
@@ -71,9 +79,10 @@ function App() {
           }
         />
       </Routes>
+      {/* Komponent stopki wyświetlany na każdej stronie */}
       <Footer />
     </Router>
   );
 }
 
-export default App;
+export default App; // Eksport głównego komponentu aplikacji

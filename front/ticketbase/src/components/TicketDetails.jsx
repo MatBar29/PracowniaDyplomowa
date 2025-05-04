@@ -2,29 +2,31 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
 import moment from 'moment';
-import 'moment/locale/pl';
+import 'moment/locale/pl'; // Ustawienie lokalizacji na polską
 
+// Komponent szczegółów zgłoszenia
 const TicketDetails = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
+  const { id } = useParams(); // Pobranie ID zgłoszenia z parametrów URL
+  const navigate = useNavigate(); // Hook do nawigacji między stronami
 
-  const [ticket, setTicket] = useState(null);
-  const [attachments, setAttachments] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [newComment, setNewComment] = useState('');
-  const [submitting, setSubmitting] = useState(false);
+  // Stany komponentu
+  const [ticket, setTicket] = useState(null); // Szczegóły zgłoszenia
+  const [attachments, setAttachments] = useState([]); // Lista załączników
+  const [loading, setLoading] = useState(true); // Stan ładowania danych
+  const [error, setError] = useState(null); // Komunikat o błędzie
+  const [newComment, setNewComment] = useState(''); // Nowy komentarz
+  const [submitting, setSubmitting] = useState(false); // Stan wysyłania komentarza
+  const [workedHours, setWorkedHours] = useState(''); // Liczba przepracowanych godzin
+  const [isSubmittingHours, setIsSubmittingHours] = useState(false); // Stan wysyłania godzin
+  const [isClosingTicket, setIsClosingTicket] = useState(false); // Stan zamykania zgłoszenia
+  const [userRole, setUserRole] = useState(null); // Rola aktualnie zalogowanego użytkownika
 
-  const [workedHours, setWorkedHours] = useState('');
-  const [isSubmittingHours, setIsSubmittingHours] = useState(false);
-  const [isClosingTicket, setIsClosingTicket] = useState(false);
-  const [userRole, setUserRole] = useState(null);
-
+  // Funkcja do pobierania szczegółów zgłoszenia
   const fetchTicketDetails = async () => {
     try {
-      const response = await api.get(`/ticket/${id}`);
-      setTicket(response.data);
-      setLoading(false);
+      const response = await api.get(`/ticket/${id}`); // Pobranie szczegółów zgłoszenia z API
+      setTicket(response.data); // Ustawienie szczegółów zgłoszenia
+      setLoading(false); // Wyłączenie stanu ładowania
     } catch (err) {
       console.error('Błąd przy pobieraniu szczegółów ticketa:', err);
       setError('Nie udało się pobrać szczegółów ticketa.');
@@ -32,41 +34,45 @@ const TicketDetails = () => {
     }
   };
 
+  // Funkcja do pobierania załączników zgłoszenia
   const fetchAttachments = async () => {
     try {
       const response = await api.get(`/${id}/attachments`, { withCredentials: true });
-      setAttachments(response.data);
+      setAttachments(response.data); // Ustawienie załączników
     } catch (err) {
       console.error('Błąd przy pobieraniu załączników:', err);
     }
   };
 
+  // Funkcja do pobierania statusu użytkownika
   const fetchUserStatus = async () => {
     try {
       const res = await api.get('/user/status/', { withCredentials: true });
-      setUserRole(res.data.role);
+      setUserRole(res.data.role); // Ustawienie roli użytkownika
     } catch (err) {
       console.error('Błąd przy pobieraniu statusu użytkownika:', err);
     }
   };
 
+  // Pobranie danych po załadowaniu komponentu
   useEffect(() => {
     fetchTicketDetails();
     fetchAttachments();
     fetchUserStatus();
   }, [id]);
 
+  // Funkcja do dodawania komentarza
   const handleAddComment = async (e) => {
     e.preventDefault();
-    if (!newComment.trim()) return;
+    if (!newComment.trim()) return; // Sprawdzenie, czy komentarz nie jest pusty
     setSubmitting(true);
     try {
       await api.post('/comment', {
         ticket_id: parseInt(id),
         comment: newComment
       });
-      setNewComment('');
-      await fetchTicketDetails();
+      setNewComment(''); // Wyczyszczenie pola komentarza
+      await fetchTicketDetails(); // Odświeżenie szczegółów zgłoszenia
     } catch (err) {
       console.error('Błąd przy dodawaniu komentarza:', err);
     } finally {
@@ -74,16 +80,17 @@ const TicketDetails = () => {
     }
   };
 
+  // Funkcja do logowania przepracowanych godzin
   const handleLogHours = async (e) => {
     e.preventDefault();
-    if (!workedHours || isNaN(workedHours)) return;
+    if (!workedHours || isNaN(workedHours)) return; // Sprawdzenie poprawności danych
     setIsSubmittingHours(true);
     try {
       await api.put(`/ticket/${id}/log-time`, {
         worked_hours: parseFloat(workedHours)
       });
-      setWorkedHours('');
-      await fetchTicketDetails();
+      setWorkedHours(''); // Wyczyszczenie pola godzin
+      await fetchTicketDetails(); // Odświeżenie szczegółów zgłoszenia
     } catch (err) {
       console.error('Błąd przy dodawaniu godzin:', err);
     } finally {
@@ -91,12 +98,13 @@ const TicketDetails = () => {
     }
   };
 
+  // Funkcja do zamykania zgłoszenia
   const handleCloseTicket = async () => {
     if (!window.confirm('Czy na pewno chcesz oznaczyć ticket jako zakończony?')) return;
     setIsClosingTicket(true);
     try {
       await api.put(`/ticket/${id}`, { status: 'closed' });
-      await fetchTicketDetails();
+      await fetchTicketDetails(); // Odświeżenie szczegółów zgłoszenia
     } catch (err) {
       console.error('Błąd przy zamykaniu ticketa:', err);
     } finally {
@@ -104,6 +112,7 @@ const TicketDetails = () => {
     }
   };
 
+  // Funkcja do generowania inicjałów użytkownika
   const getInitials = (name) => {
     return name
       .split(' ')
@@ -111,6 +120,7 @@ const TicketDetails = () => {
       .join('');
   };
 
+  // Funkcja do tłumaczenia statusu zgłoszenia
   const translateStatus = (status) => {
     switch (status) {
       case 'new':
@@ -125,7 +135,8 @@ const TicketDetails = () => {
         return status;
     }
   };
-  
+
+  // Funkcja do tłumaczenia priorytetu zgłoszenia
   const translatePriority = (priority) => {
     switch (priority) {
       case 'low':
@@ -138,25 +149,28 @@ const TicketDetails = () => {
         return priority;
     }
   };
-  
 
+  // Wyświetlenie komunikatów w zależności od stanu
   if (loading) return <div>Ładowanie szczegółów...</div>;
   if (error) return <div>{error}</div>;
   if (!ticket) return <div>Ticket nie znaleziony</div>;
 
   return (
     <div className="container mt-4">
+      {/* Szczegóły zgłoszenia */}
       <div className="mb-3">
         <button onClick={() => navigate('/ticket-list')} className="btn btn-outline-secondary">
           ← Powrót do listy
         </button>
       </div>
 
+      {/* Wyświetlenie szczegółów zgłoszenia */}
       <div className="card shadow-sm mb-4">
         <div className="card-body">
           <h3 className="card-title">{ticket.title}</h3>
           <p className="card-text"><strong>Opis:</strong> {ticket.description}</p>
 
+          {/* Wyświetlenie statusu, priorytetu i przypisanego użytkownika */}
           <div className="row mb-2 align-items-center">
             <div className="col-md-4">
               <strong>Status:</strong>{' '}
@@ -172,6 +186,7 @@ const TicketDetails = () => {
             </div>
           </div>
 
+          {/* Sekcja dla serwisantów */}
           {userRole === 'service' && (
             <div className="row mb-3">
               <div className="col-md-6 d-flex align-items-center gap-2">
@@ -197,6 +212,7 @@ const TicketDetails = () => {
             </div>
           )}
 
+          {/* Wyświetlenie szczegółów twórcy i dat */}
           <div className="row mb-3">
             <div className="col-md-6">
               <strong>Utworzył:</strong> {ticket.creator.name}
@@ -210,6 +226,7 @@ const TicketDetails = () => {
             <strong>Aktualizacja:</strong> {moment(ticket.updated_at).format('LLL')}
           </div>
 
+          {/* Wyświetlenie progresu pracy */}
           {ticket.estimated_hours ? (
             <div className="mb-4">
               <h5 className="mb-2">Progres pracy:</h5>
@@ -235,6 +252,7 @@ const TicketDetails = () => {
             </div>
           )}
 
+          {/* Wyświetlenie załączników */}
           <div className="mt-4">
             <h5 className="mb-3">Załączniki:</h5>
             {attachments.length === 0 ? (
@@ -275,6 +293,7 @@ const TicketDetails = () => {
         </div>
       </div>
 
+      {/* Wyświetlenie komentarzy */}
       <h4>Komentarze</h4>
       {ticket.comments.length === 0 ? (
         <p>Brak komentarzy.</p>
@@ -313,6 +332,7 @@ const TicketDetails = () => {
         </div>
       )}
 
+      {/* Formularz dodawania komentarza */}
       <form onSubmit={handleAddComment}>
         <div className="mb-3">
           <label htmlFor="newComment" className="form-label">Dodaj komentarz</label>
@@ -333,4 +353,4 @@ const TicketDetails = () => {
   );
 };
 
-export default TicketDetails;
+export default TicketDetails; // Eksport komponentu szczegółów zgłoszenia

@@ -9,15 +9,15 @@ const AddTicket = () => {
 
   // Stan formularza dla tytułu i opisu zgłoszenia
   const [formData, setFormData] = useState({
-    title: "",
-    description: "",
+    title: "", // Tytuł zgłoszenia
+    description: "", // Opis zgłoszenia
   });
 
   // Stan dla załączonych plików
-  const [files, setFiles] = useState([]);
+  const [files, setFiles] = useState([]); // Przechowywanie wybranych plików
 
   // Stan dla błędów
-  const [error, setError] = useState(null);
+  const [error, setError] = useState(null); // Przechowywanie komunikatu o błędzie
 
   // Obsługa zmiany wartości w polach formularza
   const handleChange = (e) => {

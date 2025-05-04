@@ -10,13 +10,13 @@ import {
   faBell
 } from '@fortawesome/free-solid-svg-icons';
 
-
+// Komponent strony głównej aplikacji
 const Home = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Hook do nawigacji między stronami
 
   return (
     <div className="container mt-5">
-      {/* Hero Section */}
+      {/* Sekcja Hero */}
       <div className="row mb-5 text-center">
         <div className="col">
           <h1 className="display-1 fw-bold text-primary">🎫 TicketBase</h1>
@@ -24,7 +24,7 @@ const Home = () => {
         </div>
       </div>
 
-      {/* About Us */}
+      {/* Sekcja "O nas" */}
       <div className="row mb-5 align-items-center">
         <div className="col-md-6">
           <h2 className="fs-1 mb-3 fw-semibold">O TicketBase</h2>
@@ -33,11 +33,13 @@ const Home = () => {
           </p>
         </div>
         <div className="col-md-6">
-          <img src="/img1.jpg" alt="TicketBase" className="img-fluid rounded shadow-sm" />
+          <img src="/img1.jpg" alt="TicketBase" className="img-fluid rounded shadow-sm" /> {/* Obrazek ilustrujący */}
         </div>
       </div>
 
+      {/* Sekcja funkcji */}
       <div className="row">
+        {/* Karta zarządzania zgłoszeniami */}
         <div className="col-md-6 mb-4">
           <div className="card h-100 shadow-sm border-0">
             <div className="card-body d-flex flex-column justify-content-between">
@@ -48,12 +50,13 @@ const Home = () => {
                 <p className="card-text text-muted">Zobacz wszystkie zgłoszenia, filtruj, edytuj i rozwiązuj problemy.</p>
               </div>
               <button className="btn btn-outline-primary mt-3" onClick={() => navigate('/ticket-list')}>
-                Przejdź do listy
+                Przejdź do listy {/* Przycisk nawigujący do listy zgłoszeń */}
               </button>
             </div>
           </div>
         </div>
 
+        {/* Karta tworzenia nowego zgłoszenia */}
         <div className="col-md-6 mb-4">
           <div className="card h-100 shadow-sm border-0">
             <div className="card-body d-flex flex-column justify-content-between">
@@ -65,7 +68,7 @@ const Home = () => {
               </div>
               <button className="btn btn-success mt-3" onClick={() => navigate('/new-ticket')}>
                 <FontAwesomeIcon className="me-2" />
-                Utwórz zgłoszenie
+                Utwórz zgłoszenie {/* Przycisk nawigujący do formularza tworzenia zgłoszenia */}
               </button>
             </div>
           </div>

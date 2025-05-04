@@ -1,13 +1,13 @@
 body {
-  margin: 0;
+  margin: 0; /* Usunięcie domyślnego marginesu */
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    sans-serif; /* Ustawienie domyślnej czcionki dla różnych systemów operacyjnych */
+  -webkit-font-smoothing: antialiased; /* Wygładzanie czcionek dla przeglądarek WebKit */
+  -moz-osx-font-smoothing: grayscale; /* Wygładzanie czcionek dla systemu macOS */
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+    monospace; /* Ustawienie czcionki monospaced dla kodu */
 }
